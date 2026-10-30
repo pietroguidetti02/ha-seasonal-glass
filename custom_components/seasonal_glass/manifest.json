@@ -1,0 +1,13 @@
+{
+  "domain": "seasonal_glass",
+  "name": "Seasonal Glass",
+  "codeowners": ["@pietroguidetti02"],
+  "config_flow": true,
+  "dependencies": ["http", "frontend"],
+  "documentation": "https://github.com/pietroguidetti02/ha-seasonal-glass",
+  "integration_type": "service",
+  "iot_class": "calculated",
+  "issue_tracker": "https://github.com/pietroguidetti02/ha-seasonal-glass/issues",
+  "single_config_entry": true,
+  "version": "0.1.2"
+}

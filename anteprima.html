@@ -1,0 +1,924 @@
+<!doctype html>
+<html lang="it"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Anteprima addobbi</title>
+<style>
+  :root{--primary-color:#6a74d3;--accent-color:#8a6ad3;--primary-background-color:#eef1f6;--primary-text-color:#131536;--card:rgba(255,255,255,.55)}
+  html.scuro{--primary-background-color:#0b1018;--primary-text-color:#f0f3ff;--card:rgba(20,28,40,.55)}
+  body{margin:0;font:15px system-ui,sans-serif;color:var(--primary-text-color);min-height:100vh;
+    background:var(--lovelace-background, linear-gradient(135deg,var(--primary-background-color),#c9d3e6))}
+  html.scuro body{background:var(--lovelace-background, linear-gradient(135deg,#0b1018,#1c2536))}
+  header{display:flex;gap:10px;align-items:center;flex-wrap:wrap;padding:14px 16px;position:relative;z-index:5}
+  header select,header button{font:inherit;padding:6px 10px;border-radius:10px;border:1px solid #8884;background:var(--card);color:inherit}
+  main{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:14px;padding:16px}
+  .card{background:var(--card);backdrop-filter:blur(14px);border:1px solid #fff3;border-radius:20px;padding:16px}
+  .card h3{margin:0 0 8px;font-size:15px}
+  .btn{display:inline-block;padding:8px 14px;border-radius:12px;background:var(--primary-color);color:#fff;border:0;font:inherit;cursor:pointer}
+  .tog{width:42px;height:24px;border-radius:12px;background:var(--primary-color);display:inline-block;vertical-align:middle;position:relative}
+  .tog:after{content:"";position:absolute;right:3px;top:3px;width:18px;height:18px;border-radius:50%;background:#fff}
+  .acc{color:var(--accent-color);font-weight:600}
+</style></head><body>
+<header><b>Anteprima addobbi</b>
+  <select id="p"><option value="">(data di oggi)</option><option value="autunno">Autunno</option><option value="carnevale">Carnevale</option><option value="estate">Estate</option><option value="halloween">Halloween</option><option value="inverno">Inverno</option><option value="natale">Natale</option><option value="pasqua">Pasqua</option><option value="primavera">Primavera</option><option value="off">Normale (nessun addobbo)</option></select>
+  <button id="m">Passa a dark</button><span id="info"></span></header>
+<main>
+  <div class="card"><h3>Luce soggiorno</h3><span class="tog"></span> Accesa</div>
+  <div class="card"><h3>Termostato</h3><span class="acc">21,5 °C</span> - riscaldamento</div>
+  <div class="card"><h3>Cancello</h3><button class="btn" onclick="this.textContent='Cliccato!'">Apri</button></div>
+  <div class="card"><h3>Meteo</h3>Nuvoloso, 12 °C</div>
+  <div class="card"><h3>Allarme</h3>Disinserito</div>
+  <div class="card"><h3>Prova click</h3><button class="btn" onclick="this.textContent=+this.textContent+1||1">0</button> i bottoni devono funzionare anche sotto gli addobbi</div>
+  <div id="cal" style="grid-column:1/-1;max-width:520px"></div>
+</main>
+<script>
+  const q = new URLSearchParams(location.search), sel = document.getElementById('p'), m = document.getElementById('m');
+  sel.value = q.get('addobbi') || '';
+  if (q.get('modo') === 'dark') document.documentElement.classList.add('scuro');
+  const vai = () => { const u = new URLSearchParams(); if (sel.value) u.set('addobbi', sel.value);
+    if (document.documentElement.classList.contains('scuro')) u.set('modo', 'dark'); location.search = u; };
+  sel.onchange = vai;
+  m.textContent = document.documentElement.classList.contains('scuro') ? 'Passa a light' : 'Passa a dark';
+  m.onclick = () => { document.documentElement.classList.toggle('scuro'); vai(); };
+</script>
+<script type="module">
+/* Seasonal Glass - FILE GENERATO da build.py, non modificare: modificare src/ e periodi/ */
+const BASE = 'dist/';
+const IMPOSTAZIONI = {"giorni_normale": 1, "movimento": "sempre"};
+const PERIODI = [
+ {
+  "nome": "Autunno",
+  "icona": "🍂",
+  "priorita": 10,
+  "date": {
+   "da": "09-12",
+   "a": "12-10"
+  },
+  "colori": {
+   "light": {
+    "primary-color": "#c0612b",
+    "accent-color": "#8a5a2b"
+   },
+   "dark": {
+    "primary-color": "#e88a4a",
+    "accent-color": "#d4a24c"
+   }
+  },
+  "velatura": {
+   "light": "linear-gradient(160deg, rgba(200,110,40,.24), rgba(140,80,30,.16))",
+   "dark": "linear-gradient(160deg, rgba(130,60,20,.26), rgba(70,35,10,.22))"
+  },
+  "effetti": [
+   {
+    "tipo": "fogliame"
+   },
+   {
+    "tipo": "foglie",
+    "quantita": 10,
+    "opacita": 0.6
+   }
+  ],
+  "id": "autunno"
+ },
+ {
+  "nome": "Carnevale",
+  "icona": "🎭",
+  "priorita": 25,
+  "date": {
+   "da": {
+    "pasqua": -53
+   },
+   "a": {
+    "pasqua": -47
+   }
+  },
+  "colori": {
+   "light": {
+    "primary-color": "#d6336c",
+    "accent-color": "#f59f00"
+   },
+   "dark": {
+    "primary-color": "#ff6b9d",
+    "accent-color": "#ffd43b"
+   }
+  },
+  "velatura": {
+   "light": "linear-gradient(135deg, rgba(255,80,160,.20), rgba(80,170,255,.20))",
+   "dark": "linear-gradient(135deg, rgba(180,40,120,.22), rgba(40,90,180,.22))"
+  },
+  "effetti": [
+   {
+    "tipo": "coriandoli",
+    "quantita": 35
+   }
+  ],
+  "id": "carnevale"
+ },
+ {
+  "nome": "Estate",
+  "icona": "☀️",
+  "priorita": 10,
+  "date": {
+   "da": "06-11",
+   "a": "09-11"
+  },
+  "colori": {
+   "light": {
+    "primary-color": "#0e9aa7",
+    "accent-color": "#f6a821"
+   },
+   "dark": {
+    "primary-color": "#3fd0dc",
+    "accent-color": "#ffc04d"
+   }
+  },
+  "velatura": {
+   "light": "linear-gradient(160deg, rgba(255,210,80,.22), rgba(60,180,220,.18))",
+   "dark": "linear-gradient(160deg, rgba(20,60,120,.25), rgba(10,90,100,.20))"
+  },
+  "effetti": [
+   {
+    "tipo": "lucciole",
+    "quantita": 14,
+    "solo": "dark"
+   }
+  ],
+  "id": "estate"
+ },
+ {
+  "nome": "Halloween",
+  "icona": "🎃",
+  "priorita": 20,
+  "date": {
+   "da": "10-20",
+   "a": "11-02"
+  },
+  "colori": {
+   "light": {
+    "primary-color": "#e8730c",
+    "accent-color": "#7b3fa0"
+   },
+   "dark": {
+    "primary-color": "#ff8c1a",
+    "accent-color": "#a66bd3"
+   }
+  },
+  "velatura": {
+   "light": "linear-gradient(160deg, rgba(255,140,30,.38), rgba(232,115,12,.22) 55%, rgba(123,63,160,.20))",
+   "dark": "linear-gradient(160deg, rgba(255,120,0,.30), rgba(120,40,0,.25) 55%, rgba(80,20,110,.30))"
+  },
+  "effetti": [
+   {
+    "tipo": "ragnatele",
+    "angoli": [
+     "alto-sinistra",
+     "alto-destra"
+    ],
+    "ragno": true
+   },
+   {
+    "tipo": "pipistrelli",
+    "quantita": 3
+   }
+  ],
+  "id": "halloween",
+  "decorazioni": []
+ },
+ {
+  "nome": "Inverno",
+  "icona": "❄️",
+  "priorita": 10,
+  "date": {
+   "da": "12-11",
+   "a": "03-09"
+  },
+  "colori": {
+   "light": {
+    "primary-color": "#3b7fc4",
+    "accent-color": "#7aa9d6"
+   },
+   "dark": {
+    "primary-color": "#7fb8ff",
+    "accent-color": "#b8d8ff"
+   }
+  },
+  "velatura": {
+   "light": "linear-gradient(160deg, rgba(180,215,255,.28), rgba(240,248,255,.18))",
+   "dark": "linear-gradient(160deg, rgba(30,60,120,.28), rgba(10,25,60,.25))"
+  },
+  "effetti": [
+   {
+    "tipo": "neve",
+    "quantita": 25,
+    "opacita": 0.6
+   }
+  ],
+  "id": "inverno"
+ },
+ {
+  "nome": "Natale",
+  "icona": "🎄",
+  "priorita": 30,
+  "date": {
+   "da": "11-30",
+   "a": "01-06"
+  },
+  "colori": {
+   "light": {
+    "primary-color": "#c0392b",
+    "accent-color": "#1e7d4f"
+   },
+   "dark": {
+    "primary-color": "#ff5a4f",
+    "accent-color": "#3fbf7f"
+   }
+  },
+  "velatura": {
+   "light": "linear-gradient(160deg, rgba(200,30,40,.22), rgba(30,120,60,.18))",
+   "dark": "linear-gradient(160deg, rgba(160,20,30,.28), rgba(10,70,40,.28))"
+  },
+  "effetti": [
+   {
+    "tipo": "lucine",
+    "stile": "filo",
+    "quantita": 24
+   },
+   {
+    "tipo": "lucine",
+    "stile": "bokeh",
+    "quantita": 16
+   },
+   {
+    "tipo": "neve",
+    "quantita": 45
+   }
+  ],
+  "id": "natale",
+  "decorazioni": []
+ },
+ {
+  "nome": "Pasqua",
+  "icona": "🐣",
+  "priorita": 25,
+  "date": {
+   "pasqua": [
+    -11,
+    1
+   ]
+  },
+  "colori": {
+   "light": {
+    "primary-color": "#8e6fd1",
+    "accent-color": "#e57fa5"
+   },
+   "dark": {
+    "primary-color": "#b9a3f0",
+    "accent-color": "#f7b8cf"
+   }
+  },
+  "velatura": {
+   "light": "linear-gradient(160deg, rgba(255,200,230,.30), rgba(200,240,190,.25))",
+   "dark": "linear-gradient(160deg, rgba(150,80,130,.22), rgba(60,110,70,.22))"
+  },
+  "effetti": [
+   {
+    "tipo": "uova"
+   },
+   {
+    "tipo": "petali",
+    "quantita": 10
+   }
+  ],
+  "id": "pasqua"
+ },
+ {
+  "nome": "Primavera",
+  "icona": "🌱",
+  "priorita": 10,
+  "date": {
+   "da": "03-10",
+   "a": "06-10"
+  },
+  "colori": {
+   "light": {
+    "primary-color": "#4caf50",
+    "accent-color": "#e57fa5"
+   },
+   "dark": {
+    "primary-color": "#7ed67f",
+    "accent-color": "#f7a8c4"
+   }
+  },
+  "velatura": {
+   "light": "linear-gradient(160deg, rgba(150,220,120,.22), rgba(255,220,235,.18))",
+   "dark": "linear-gradient(160deg, rgba(40,110,50,.22), rgba(90,50,80,.15))"
+  },
+  "effetti": [
+   {
+    "tipo": "germogli"
+   },
+   {
+    "tipo": "petali",
+    "quantita": 10,
+    "colori": [
+     "#f7c6d9",
+     "#ffffff",
+     "#fbd3e0",
+     "#e8f5c8"
+    ]
+   }
+  ],
+  "id": "primavera"
+ }
+];
+const CUSTOM = {
+
+};
+
+/* Seasonal Glass - motore del plugin.
+ * build.py antepone: const BASE, const PERIODI, const CUSTOM.
+ * Tutto cio' che disegna sta in un livello fisso con pointer-events:none: non blocca mai i tocchi. */
+const VERSIONE = '0.1.0';
+const ID = 'seasonal-glass';
+
+// ---------- date ----------
+function pasqua(y) { // algoritmo di Meeus (calendario gregoriano)
+  const a = y % 19, b = Math.floor(y / 100), c = y % 100, d = Math.floor(b / 4), e = b % 4;
+  const f = Math.floor((b + 8) / 25), g = Math.floor((b - f + 1) / 3), h = (19 * a + b - d - g + 15) % 30;
+  const i = Math.floor(c / 4), k = c % 4, l = (32 + 2 * e + 2 * i - h - k) % 7, m = Math.floor((a + 11 * h + 22 * l) / 451);
+  const n = h + l - 7 * m + 114;
+  return new Date(y, Math.floor(n / 31) - 1, (n % 31) + 1);
+}
+
+// un estremo e' "MM-GG" oppure { "pasqua": n } = n giorni da Pasqua (negativo = prima); ricalcolato ogni anno
+function giorno(v, anno) {
+  if (typeof v === 'object') { const e = pasqua(anno); e.setDate(e.getDate() + v.pasqua); return e; }
+  const [m, g] = v.split('-').map(Number);
+  return new Date(anno, m - 1, g);
+}
+
+function attivo(p, oggi) {
+  const d = p.date || {};
+  const da = d.pasqua ? { pasqua: d.pasqua[0] } : d.da, a = d.pasqua ? { pasqua: d.pasqua[1] } : d.a;
+  if (!da || !a) return false;
+  for (const anno of [oggi.getFullYear() - 1, oggi.getFullYear()]) { // anno precedente: periodi a cavallo di capodanno
+    const inizio = giorno(da, anno);
+    let fine = giorno(a, anno);
+    if (fine < inizio) fine = giorno(a, anno + 1);
+    if (oggi >= inizio && oggi <= fine) return true;
+  }
+  return false;
+}
+
+// ---------- light / dark ----------
+function luminanza(colore) {
+  const c = document.createElement('canvas').getContext('2d');
+  c.fillStyle = '#808080'; c.fillStyle = colore || '#808080';
+  const v = c.fillStyle; // normalizzato in #rrggbb o rgba(...)
+  const n = v[0] === '#' ? [1, 3, 5].map(i => parseInt(v.substr(i, 2), 16)) : v.match(/[\d.]+/g).slice(0, 3).map(Number);
+  return (0.2126 * n[0] + 0.7152 * n[1] + 0.0722 * n[2]) / 255;
+}
+
+function modoScuro() {
+  // pagine fuori da Lovelace (es. kiosk/screensaver): window.seasonalGlass = { modo: 'dark' | 'light' | () => bool }
+  const conf = window.seasonalGlass?.modo;
+  const forzato = new URLSearchParams(location.search).get('modo') || (typeof conf === 'string' ? conf : '');
+  if (forzato) return forzato === 'dark';
+  if (typeof conf === 'function') return !!conf();
+  const h = document.querySelector('home-assistant')?.hass;
+  const nome = String(h?.selectedTheme?.theme || h?.themes?.theme || '');
+  if (/dark|scuro|notte|night/i.test(nome)) return true;
+  if (/light|chiaro|giorno|day/i.test(nome)) return false;
+  const bg = getComputedStyle(document.documentElement).getPropertyValue('--primary-background-color').trim();
+  if (bg) return luminanza(bg) < 0.5;
+  return !!h?.themes?.darkMode;
+}
+
+// ---------- utilita' di disegno ----------
+// movimento: "sempre" (predefinito) | "auto" = segue "riduci movimento" del dispositivo | "mai" = immagine ferma
+const lento = () => {
+  const m = MANUALE.movimento || IMPOSTAZIONI.movimento || 'sempre';
+  return m === 'mai' || (m === 'auto' && matchMedia('(prefers-reduced-motion: reduce)').matches);
+};
+const caso = (a, b) => a + Math.random() * (b - a);
+
+function tela(ctx) {
+  const c = document.createElement('canvas');
+  c.style.cssText = 'position:absolute;inset:0;width:100%;height:100%';
+  ctx.livello.appendChild(c);
+  const g = c.getContext('2d'), dpr = Math.min(devicePixelRatio || 1, 2);
+  const misura = () => { c.width = innerWidth * dpr; c.height = innerHeight * dpr; g.setTransform(dpr, 0, 0, dpr, 0, 0); };
+  misura(); addEventListener('resize', misura);
+  return { g, w: () => innerWidth, h: () => innerHeight, stop() { removeEventListener('resize', misura); c.remove(); } };
+}
+
+// ciclo a ~30 fps (basta e risparmia Chromecast/tablet); rAF si ferma da solo a scheda nascosta
+function anima(disegna) {
+  let id, prima = performance.now(), vivo = true;
+  const giro = t => {
+    if (!vivo) return;
+    id = requestAnimationFrame(giro);
+    if (t - prima < 33) return;
+    disegna(Math.min((t - prima) / 1000, 0.1), t / 1000); prima = t;
+  };
+  id = requestAnimationFrame(giro);
+  return () => { vivo = false; cancelAnimationFrame(id); };
+}
+
+function conTela(ctx, disegna) {
+  const t = tela(ctx);
+  if (lento()) { // un solo fotogramma fisso, ridisegnato quando la finestra cambia (cambiare misura svuota il canvas)
+    const fisso = () => disegna(t, 0, 0);
+    fisso(); addEventListener('resize', fisso);
+    return () => { removeEventListener('resize', fisso); t.stop(); };
+  }
+  const fermaAnim = anima((dt, s) => disegna(t, dt, s));
+  return () => { fermaAnim(); t.stop(); };
+}
+
+// ---------- effetti integrati ----------
+const EFFETTI = {
+  neve(ctx, o) {
+    const fiocchi = Array.from({ length: o.quantita ?? 50 }, () => ({
+      x: caso(0, innerWidth), y: caso(-innerHeight, innerHeight), r: caso(1, 3.5), v: caso(18, 55), f: caso(0, 6),
+    }));
+    const col = ctx.dark ? `rgba(255,255,255,${o.opacita ?? 0.8})` : `rgba(150,175,205,${o.opacita ?? 0.75})`;
+    return conTela(ctx, (t, dt, s) => {
+      const { g } = t; g.clearRect(0, 0, t.w(), t.h()); g.fillStyle = col;
+      for (const p of fiocchi) {
+        p.y += p.v * dt; p.x += Math.sin(s + p.f) * 12 * dt;
+        if (p.y > t.h() + 5) { p.y = -5; p.x = caso(0, t.w()); }
+        g.beginPath(); g.arc(p.x, p.y, p.r, 0, 7); g.fill();
+      }
+    });
+  },
+
+  lucine(ctx, o) {
+    const colori = o.colori || ['#ff4d4d', '#ffd84d', '#4dff88', '#4db8ff', '#ff9a3d'];
+    const max = o.opacita ?? (ctx.dark ? 0.55 : 0.35);
+    let luci;
+    if (o.stile === 'filo') { // filo di lampadine che pende lungo il bordo alto
+      const n = o.quantita ?? 22;
+      luci = Array.from({ length: n }, (_, i) => ({ fx: (i + 0.5) / n, r: 5, c: colori[i % colori.length], f: caso(0, 6), filo: true }));
+    } else { // bokeh: punti luce sfocati sparsi
+      luci = Array.from({ length: o.quantita ?? 18 }, (_, i) => ({
+        fx: Math.random(), fy: Math.random(), r: caso(10, 26), c: colori[i % colori.length], f: caso(0, 6),
+      }));
+    }
+    return conTela(ctx, (t, dt, s) => {
+      const { g } = t, W = t.w(), H = t.h(); g.clearRect(0, 0, W, H);
+      if (o.stile === 'filo') {
+        const y = fx => 6 + Math.sin(fx * Math.PI * 4) ** 2 * 26; // 4 festoni
+        g.strokeStyle = ctx.dark ? 'rgba(200,200,200,.35)' : 'rgba(60,60,60,.35)'; g.lineWidth = 1.2;
+        g.beginPath(); for (let x = 0; x <= W; x += 8) g.lineTo(x, y(x / W)); g.stroke();
+        for (const l of luci) {
+          const x = l.fx * W, yy = y(l.fx) + 7, a = (0.55 + 0.45 * Math.sin(s * 2 + l.f)) * Math.max(max, 0.7);
+          const gr = g.createRadialGradient(x, yy, 0, x, yy, l.r * 3.2);
+          gr.addColorStop(0, l.c); gr.addColorStop(1, l.c + '00');
+          g.globalAlpha = a * 0.6; g.fillStyle = gr; g.beginPath(); g.arc(x, yy, l.r * 3.2, 0, 7); g.fill();
+          g.globalAlpha = Math.min(1, a + 0.2); g.fillStyle = l.c; g.beginPath(); g.ellipse(x, yy, l.r * 0.6, l.r, 0, 0, 7); g.fill();
+        }
+      } else {
+        for (const l of luci) {
+          const x = l.fx * W, yy = l.fy * H;
+          const gr = g.createRadialGradient(x, yy, 0, x, yy, l.r);
+          gr.addColorStop(0, l.c); gr.addColorStop(1, l.c + '00');
+          g.globalAlpha = max * (0.5 + 0.5 * Math.sin(s * 1.3 + l.f)); g.fillStyle = gr;
+          g.beginPath(); g.arc(x, yy, l.r, 0, 7); g.fill();
+        }
+      }
+      g.globalAlpha = 1;
+    });
+  },
+
+  ragnatele(ctx, o) {
+    const col = ctx.dark ? `rgba(235,235,245,${o.opacita ?? 0.4})` : `rgba(50,50,60,${o.opacita ?? 0.4})`;
+    const L = 200, raggi = 7, anelli = 6;
+    const punto = (r, i) => { const a = (i / (raggi - 1)) * Math.PI / 2; return [Math.cos(a) * r, Math.sin(a) * r]; };
+    let d = '';
+    for (let i = 0; i < raggi; i++) { const [x, y] = punto(L, i); d += `M0 0L${x.toFixed(1)} ${y.toFixed(1)}`; }
+    for (let k = 1; k <= anelli; k++) {
+      const r = (L / anelli) * k * 0.95;
+      for (let i = 0; i < raggi - 1; i++) {
+        const [x1, y1] = punto(r, i), [x2, y2] = punto(r, i + 1);
+        d += `M${x1.toFixed(1)} ${y1.toFixed(1)}Q${((x1 + x2) * 0.42).toFixed(1)} ${((y1 + y2) * 0.42).toFixed(1)} ${x2.toFixed(1)} ${y2.toFixed(1)}`;
+      }
+    }
+    const svg = `<svg viewBox="0 0 ${L} ${L}" xmlns="http://www.w3.org/2000/svg"><path d="${d}" fill="none" stroke="${col}" stroke-width="1"/></svg>`;
+    const angoli = o.angoli || ['alto-sinistra', 'alto-destra'];
+    const els = angoli.map(pos => {
+      const el = document.createElement('div');
+      const [v, h] = pos.split('-');
+      el.style.cssText = `position:absolute;${v === 'alto' ? 'top' : 'bottom'}:0;${h === 'sinistra' ? 'left' : 'right'}:0;` +
+        `width:${o.dimensione || '22vmin'};height:${o.dimensione || '22vmin'};` +
+        `transform:scale(${h === 'destra' ? -1 : 1},${v === 'basso' ? -1 : 1})`;
+      el.innerHTML = svg; el.firstChild.style.cssText = 'width:100%;height:100%';
+      ctx.livello.appendChild(el); return el;
+    });
+    if (o.ragno !== false) { // ragnetto che scende e sale dall'angolo destro
+      const r = document.createElement('div');
+      const c = ctx.dark ? '#ddd' : '#222';
+      r.innerHTML = `<div style="width:1px;height:100%;margin:auto;background:${col}"></div>` +
+        `<svg viewBox="-10 -8 20 16" style="position:absolute;bottom:-8px;left:-9px;width:18px"><g stroke="${c}" stroke-width="1.2" fill="none">` +
+        `<path d="M-3-1L-9-5M-3 0L-9 0M-3 1L-9 5M3-1L9-5M3 0L9 0M3 1L9 5"/></g><ellipse rx="4" ry="5" fill="${c}"/></svg>`;
+      r.style.cssText = 'position:absolute;top:0;right:12vmin;width:1px;height:14vmin;transform-origin:top';
+      ctx.livello.appendChild(r); els.push(r);
+      if (!lento()) r.animate([{ height: '6vmin' }, { height: '18vmin' }, { height: '6vmin' }],
+        { duration: 9000, iterations: Infinity, easing: 'ease-in-out' });
+    }
+    return () => els.forEach(e => e.remove());
+  },
+
+  pipistrelli(ctx, o) {
+    const nuovo = () => ({ x: -40, y: caso(innerHeight * 0.05, innerHeight * 0.5), v: caso(50, 110), f: caso(0, 6),
+      s: caso(0.6, 1.1), attesa: caso(0, 12) });
+    const bats = Array.from({ length: o.quantita ?? 3 }, nuovo);
+    const col = ctx.dark ? `rgba(150,100,190,${o.opacita ?? 0.6})` : `rgba(25,15,35,${o.opacita ?? 0.6})`;
+    return conTela(ctx, (t, dt, s) => {
+      const { g } = t; g.clearRect(0, 0, t.w(), t.h()); g.fillStyle = col;
+      for (const b of bats) {
+        if (b.attesa > 0) { b.attesa -= dt; continue; }
+        b.x += b.v * dt; const y = b.y + Math.sin(s * 2 + b.f) * 20, ali = Math.sin(s * 14 + b.f) * 7 * b.s;
+        if (b.x > t.w() + 40) Object.assign(b, nuovo(), { attesa: caso(4, 15) });
+        const k = 10 * b.s;
+        g.beginPath(); g.moveTo(b.x, y);
+        g.quadraticCurveTo(b.x - k, y - ali - 4, b.x - 2 * k, y - ali);
+        g.quadraticCurveTo(b.x - k, y + 2, b.x, y + 3);
+        g.quadraticCurveTo(b.x + k, y + 2, b.x + 2 * k, y - ali);
+        g.quadraticCurveTo(b.x + k, y - ali - 4, b.x, y); g.fill();
+      }
+    });
+  },
+
+  foglie(ctx, o) { return cadute(ctx, o, o.colori || ['#c0582b', '#d98a2b', '#a33b20', '#8a5a2b', '#e0b13a'], 9, 15); },
+  petali(ctx, o) { return cadute(ctx, o, o.colori || ['#f7c6d9', '#fce7a8', '#c9e7c4', '#d6c8f5', '#bfe3f5'], 5, 22); },
+  coriandoli(ctx, o) { return cadute(ctx, o, o.colori || ['#ff4f6d', '#ffc93c', '#3cc4ff', '#5be37d', '#b06bff', '#ff8a3c'], 3, 40, true); },
+
+  germogli(ctx, o) { // steli verdi che spuntano dagli angoli e ondeggiano
+    const verde = ctx.dark ? '#8fdc7a' : '#4f9a45', foglia = ctx.dark ? '#a8e88f' : '#66b35a';
+    let svg = '';
+    for (let i = 0; i < 6; i++) {
+      const x = 8 + i * 20 + caso(-4, 4), h = caso(60, 160) * (1 - i * 0.1), dx = caso(-15, 25);
+      const p = t => [ // punto sulla curva quadratica dello stelo
+        (1 - t) ** 2 * x + 2 * (1 - t) * t * (x + dx) + t * t * (x + dx * 0.6),
+        (1 - t) ** 2 * 200 + 2 * (1 - t) * t * (200 - h / 2) + t * t * (200 - h)];
+      let foglie = '';
+      for (const [t, lato] of [[0.45, 1], [0.7, -1], [0.92, 1]]) {
+        const [fx, fy] = p(t);
+        foglie += `<ellipse cx="${(fx + lato * 8).toFixed(1)}" cy="${fy.toFixed(1)}" rx="9" ry="3.6" fill="${foglia}" transform="rotate(${-lato * 35} ${fx.toFixed(1)} ${fy.toFixed(1)})"/>`;
+      }
+      const [tx, ty] = p(1);
+      svg += `<g class="oscilla" style="transform-origin:${x}px 200px">` +
+        `<path d="M${x} 200Q${x + dx} ${200 - h / 2} ${tx.toFixed(1)} ${ty.toFixed(1)}" stroke="${verde}" stroke-width="3" fill="none" stroke-linecap="round"/>` +
+        `${foglie}<circle cx="${tx.toFixed(1)}" cy="${ty.toFixed(1)}" r="3.5" fill="${foglia}"/></g>`;
+    }
+    return angoli(ctx, o, svg, ['basso-sinistra', 'basso-destra'], 0.45);
+  },
+
+  fogliame(ctx, o) { // mucchietto di foglie secche negli angoli
+    const colori = o.colori || ['#8b5a2b', '#a0522d', '#6f4518', '#b5762f', '#7a4a1e', '#c08a3e'];
+    let svg = '';
+    for (let i = 0; i < 11; i++) {
+      const a = caso(0, Math.PI / 2), r = caso(15, 120), x = Math.cos(a) * r, y = 200 - Math.sin(a) * r;
+      const s = caso(0.8, 1.5) * (1 - r / 260), c = colori[i % colori.length];
+      svg += `<g class="oscilla" style="transform-origin:${x.toFixed(1)}px ${y.toFixed(1)}px">` +
+        `<g transform="translate(${x.toFixed(1)} ${y.toFixed(1)}) rotate(${caso(0, 360).toFixed(0)}) scale(${s.toFixed(2)})">` +
+        `<path d="M0-26Q14-14 9 4Q6 16 0 22Q-6 16-9 4Q-14-14 0-26Z" fill="${c}"/>` +
+        `<path d="M0-22V20M0-6L6-12M0 4L-6-2" stroke="rgba(0,0,0,.25)" stroke-width="1" fill="none"/></g></g>`;
+    }
+    return angoli(ctx, o, svg, ['alto-sinistra', 'basso-destra'], 0.5);
+  },
+
+  uova(ctx, o) { // ovetti decorati nell'erba agli angoli bassi, ogni tanto dondolano
+    const colori = o.colori || ['#f7b8cf', '#b8d8f7', '#fce59a', '#c9ecb4', '#d9c6f5'];
+    const erba = ctx.dark ? '#5fae5a' : '#7cc36f';
+    let svg = '';
+    for (let i = 0; i < 9; i++) {
+      const x = i * 15 + caso(-3, 3), h = caso(18, 40);
+      svg += `<path d="M${x} 200Q${x + 3} ${200 - h / 2} ${x + caso(-6, 6)} ${200 - h}Q${x + 6} ${200 - h / 2} ${x + 8} 200Z" fill="${erba}"/>`;
+    }
+    [[34, 160, 1.4], [86, 168, 1.2], [132, 176, 1]].forEach(([x, y, s], i) => {
+      const c = colori[(i + Math.floor(caso(0, 5))) % colori.length];
+      svg += `<g class="dondola" style="transform-origin:${x}px ${y + 26 * s}px"><g transform="translate(${x} ${y}) scale(${s})">` +
+        `<path d="M0-26C14-26 18-4 18 6C18 20 9 26 0 26C-9 26-18 20-18 6C-18-4-14-26 0-26Z" fill="${c}" stroke="rgba(0,0,0,.15)"/>` +
+        `<path d="M-17 2L-11-4L-5 2L1-4L7 2L13-4L17 0" stroke="#fff" stroke-width="2.5" fill="none" stroke-linejoin="round"/>` +
+        `<circle cx="-7" cy="13" r="2.4" fill="#fff"/><circle cx="1" cy="16" r="2.4" fill="#fff"/><circle cx="9" cy="12" r="2.4" fill="#fff"/>` +
+        `</g></g>`;
+    });
+    o = { dimensione: '30vmin', ...o };
+    return angoli(ctx, o, svg, ['basso-sinistra', 'basso-destra'], 0.85);
+  },
+
+  lucciole(ctx, o) { // punti luminosi che vagano lenti e pulsano
+    const col = o.colore || '#d8ff6a';
+    const lu = Array.from({ length: o.quantita ?? 14 }, () => ({
+      x: caso(0, innerWidth), y: caso(innerHeight * 0.3, innerHeight), d: caso(0, 6), v: caso(8, 20), f: caso(0, 6),
+    }));
+    const max = o.opacita ?? 0.7;
+    return conTela(ctx, (t, dt, s) => {
+      const { g } = t, W = t.w(), H = t.h(); g.clearRect(0, 0, W, H);
+      for (const l of lu) {
+        l.d += caso(-1, 1) * dt; l.x += Math.cos(l.d) * l.v * dt; l.y += Math.sin(l.d) * l.v * dt;
+        l.x = (l.x + W) % W; l.y = Math.min(H, Math.max(H * 0.2, l.y));
+        const a = max * Math.max(0, Math.sin(s * 1.5 + l.f));
+        const gr = g.createRadialGradient(l.x, l.y, 0, l.x, l.y, 9);
+        gr.addColorStop(0, col); gr.addColorStop(1, col + '00');
+        g.globalAlpha = a; g.fillStyle = gr; g.beginPath(); g.arc(l.x, l.y, 9, 0, 7); g.fill();
+      }
+      g.globalAlpha = 1;
+    });
+  },
+};
+
+// disegno SVG d'angolo: coordinate 0..200 pensate per l'angolo in basso a sinistra (0,200),
+// specchiato per gli altri angoli. .oscilla = ondeggia piano, .dondola = ogni tanto dondola
+function angoli(ctx, o, svg, predefiniti, opacita) {
+  const dim = o.dimensione || '26vmin';
+  const els = (o.angoli || predefiniti).map(pos => {
+    const [v, h] = pos.split('-'), el = document.createElement('div');
+    el.style.cssText = `position:absolute;${v === 'alto' ? 'top' : 'bottom'}:0;${h === 'sinistra' ? 'left' : 'right'}:0;` +
+      `width:${dim};height:${dim};opacity:${o.opacita ?? opacita};transform:scale(${h === 'destra' ? -1 : 1},${v === 'alto' ? -1 : 1})`;
+    el.innerHTML = `<svg viewBox="0 0 200 200" style="width:100%;height:100%;overflow:visible">${svg}</svg>`;
+    ctx.livello.appendChild(el);
+    if (!lento()) {
+      el.querySelectorAll('.oscilla').forEach(g => g.animate(
+        [{ transform: 'rotate(-2.5deg)' }, { transform: 'rotate(2.5deg)' }],
+        { duration: caso(3000, 5500), direction: 'alternate', iterations: Infinity, easing: 'ease-in-out', delay: -caso(0, 4000) }));
+      el.querySelectorAll('.dondola').forEach(g => g.animate(
+        [{ transform: 'rotate(0)' }, { transform: 'rotate(-9deg)', offset: 0.04 }, { transform: 'rotate(7deg)', offset: 0.08 },
+          { transform: 'rotate(-4deg)', offset: 0.12 }, { transform: 'rotate(0)', offset: 0.16 }, { transform: 'rotate(0)' }],
+        { duration: caso(7000, 11000), iterations: Infinity, delay: caso(0, 5000) }));
+    }
+    return el;
+  });
+  return () => els.forEach(e => e.remove());
+}
+
+function cadute(ctx, o, colori, dim, n, tondi = false) {
+  const items = Array.from({ length: o.quantita ?? n }, (_, i) => ({
+    x: caso(0, innerWidth), y: caso(-innerHeight, innerHeight), r: caso(dim * 0.6, dim * 1.3), v: caso(20, 50),
+    a: caso(0, 6), va: caso(-1.5, 1.5), f: caso(0, 6), c: colori[i % colori.length],
+  }));
+  const alfa = o.opacita ?? 0.75;
+  return conTela(ctx, (t, dt, s) => {
+    const { g } = t; g.clearRect(0, 0, t.w(), t.h()); g.globalAlpha = alfa;
+    for (const p of items) {
+      p.y += p.v * dt; p.x += Math.sin(s * 0.8 + p.f) * 25 * dt; p.a += p.va * dt;
+      if (p.y > t.h() + 20) { p.y = -20; p.x = caso(0, t.w()); }
+      g.save(); g.translate(p.x, p.y); g.rotate(p.a); g.fillStyle = p.c;
+      g.beginPath();
+      if (tondi) g.ellipse(0, 0, p.r, p.r * Math.abs(Math.cos(p.a * 2)) + 0.5, 0, 0, 7); // il coriandolo "gira" su se stesso
+      else { g.moveTo(0, -p.r); g.quadraticCurveTo(p.r * 0.8, 0, 0, p.r); g.quadraticCurveTo(-p.r * 0.8, 0, 0, -p.r); }
+      g.fill();
+      g.restore();
+    }
+    g.globalAlpha = 1;
+  });
+}
+
+// ---------- montaggio ----------
+const POSIZIONI = {
+  'alto-sinistra': 'top:0;left:0', 'alto-destra': 'top:0;right:0', 'basso-sinistra': 'bottom:0;left:0',
+  'basso-destra': 'bottom:0;right:0', 'alto-centro': 'top:0;left:50%;transform:translateX(-50%)',
+  'basso-centro': 'bottom:0;left:50%;transform:translateX(-50%)',
+};
+
+let chiave = null, pulizie = [];
+
+function smonta() { pulizie.forEach(f => { try { f(); } catch (e) { console.warn(ID, e); } }); pulizie = []; }
+
+function monta(p, dark) {
+  const modo = dark ? 'dark' : 'light';
+  const vars = Object.entries((p.colori || {})[modo] || {}).map(([k, v]) => `--${k}:${v} !important;`);
+  const sfondo = p.sfondo?.[modo];
+  if (sfondo) vars.push(`--lovelace-background:center / cover no-repeat fixed url("${BASE}${sfondo}") !important;`);
+  else if (p.velatura?.[modo]) {
+    // velatura: una sfumatura colorata stesa sopra lo sfondo del tema (che resta sotto, si vede in trasparenza)
+    const v = p.velatura[modo], strato = v.includes('gradient(') ? v : `linear-gradient(${v}, ${v})`;
+    vars.push(`--lovelace-background:${strato} fixed, var(--background-image, var(--primary-background-color)) !important;`);
+    vars.push(`--seasonal-glass-velatura:${strato};`); // per pagine fuori da Lovelace (kiosk)
+  }
+  const principale = ((p.colori || {})[modo] || {})['primary-color'];
+  if (principale) vars.push(`--seasonal-glass-colore:${principale};`);
+  const st = document.createElement('style'); st.id = ID + '-stile';
+  st.textContent = `html{${vars.join('')}}`;
+  document.head.appendChild(st); pulizie.push(() => st.remove());
+
+  const livello = document.createElement('div'); livello.id = ID + '-livello';
+  livello.style.cssText = 'position:fixed;inset:0;pointer-events:none;z-index:3;overflow:hidden';
+  document.body.appendChild(livello); pulizie.push(() => livello.remove());
+  const ctx = { dark, livello, periodo: p };
+
+  for (const d of p.decorazioni || []) {
+    const src = d[modo] || d.light || d.dark;
+    const img = document.createElement('img'); img.src = BASE + src; img.alt = '';
+    img.style.cssText = `position:absolute;${POSIZIONI[d.pos] || POSIZIONI['alto-sinistra']};max-width:${d.max || '24vmin'};max-height:${d.max || '24vmin'};opacity:${d.opacita ?? 0.95}`;
+    livello.appendChild(img);
+  }
+  for (const e of p.effetti || []) {
+    if (e.solo && e.solo !== modo) continue;
+    const fn = EFFETTI[e.tipo];
+    if (!fn) { console.warn(ID, 'effetto sconosciuto:', e.tipo); continue; }
+    pulizie.push(fn(ctx, e));
+  }
+  if (CUSTOM[p.id]) pulizie.push(CUSTOM[p.id](ctx) || (() => {}));
+}
+
+function scegli() {
+  let forzato = new URLSearchParams(location.search).get('addobbi');
+  try { forzato = forzato || localStorage.getItem('addobbi'); } catch (e) { /* storage non disponibile */ }
+  if (forzato === 'off') return null;
+  if (forzato) { const p = periodiEffettivi().find(x => x.id === forzato); if (p) return p; }
+  const n = new Date();
+  return periodoDelGiorno(new Date(n.getFullYear(), n.getMonth(), n.getDate()));
+}
+
+// ---------- impostazioni manuali ----------
+// Due fonti, unite: 1) l'integrazione (Dispositivi e servizi > Seasonal Glass > Configura)
+// 2) lo YAML della card (ha la precedenza). Forma comune:
+// { giorni_normale, movimento, periodi: { natale: { da: "11-25" }, estate: { disattivo: true } } }
+const FONTI = { integrazione: {}, card: {} };
+let MANUALE = {}, effettivi = null;
+const pick = (o, ...k) => Object.fromEntries(k.filter(x => o[x] !== undefined).map(x => [x, o[x]]));
+
+function periodiEffettivi() {
+  if (!effettivi) {
+    const man = MANUALE.periodi || {};
+    effettivi = PERIODI.map(p => {
+      const m = man[p.id];
+      if (!m) return p;
+      // date sempre in forma {da, a} cosi' si puo' cambiare un solo estremo anche per i periodi legati a Pasqua
+      const base = p.date.pasqua ? { da: { pasqua: p.date.pasqua[0] }, a: { pasqua: p.date.pasqua[1] } } : p.date;
+      const date = m.pasqua ? { pasqua: m.pasqua } : { ...base, ...pick(m, 'da', 'a') };
+      // colori e velatura: si sostituiscono solo le voci indicate, per modo (light/dark)
+      const fondi = k => m[k] ? Object.fromEntries(['light', 'dark'].map(modo => [modo,
+        typeof (p[k] || {})[modo] === 'object' ? { ...p[k][modo], ...(m[k][modo] || {}) } : (m[k][modo] ?? (p[k] || {})[modo])]))
+        : p[k];
+      return { ...p, ...pick(m, 'priorita', 'disattivo', 'nome', 'icona'), date,
+        colori: fondi('colori'), velatura: fondi('velatura'), manuale: true };
+    }).filter(p => !p.disattivo);
+  }
+  return effettivi;
+}
+
+function impostaManuale(m, fonte = 'card') {
+  FONTI[fonte] = m || {};
+  const i = FONTI.integrazione, c = FONTI.card, periodi = {};
+  for (const id of new Set([...Object.keys(i.periodi || {}), ...Object.keys(c.periodi || {})]))
+    periodi[id] = { ...(i.periodi || {})[id], ...(c.periodi || {})[id] };
+  const unito = { ...i, ...c };
+  if (Object.keys(periodi).length) unito.periodi = periodi;
+  const nuovo = JSON.stringify(unito);
+  if (nuovo === JSON.stringify(MANUALE)) return;
+  MANUALE = JSON.parse(nuovo); effettivi = null; chiave = null; aggiorna();
+  dispatchEvent(new Event('seasonal-glass-cambiato'));
+}
+
+// impostazioni dell'integrazione (endpoint senza login: funziona anche sul kiosk) + YAML della card nella dashboard,
+// cosi' le modifiche valgono su tutti i dispositivi anche dove la card non e' a schermo
+async function caricaManuale() {
+  try {
+    const r = await fetch('/api/seasonal_glass/config', { cache: 'no-store' });
+    if (r.ok) impostaManuale(await r.json(), 'integrazione');
+  } catch (e) { /* integrazione non installata: solo plugin */ }
+  const h = document.querySelector('home-assistant')?.hass;
+  if (!h?.connection) return;
+  try {
+    const cfg = await h.connection.sendMessagePromise({ type: 'lovelace/config', url_path: window.seasonalGlass?.dashboard ?? null });
+    let trovata = null;
+    const cerca = o => {
+      if (trovata || !o || typeof o !== 'object') return;
+      if (o.type === 'custom:seasonal-glass-card') { trovata = o; return; }
+      Object.values(o).forEach(cerca);
+    };
+    cerca(cfg);
+    if (trovata) impostaManuale(pick(trovata, 'periodi', 'giorni_normale', 'movimento'));
+  } catch (e) { /* dashboard non leggibile: resta il calendario automatico */ }
+}
+
+function vincitore(giorno) {
+  return periodiEffettivi().filter(p => attivo(p, giorno)).sort((a, b) => (b.priorita || 0) - (a.priorita || 0))[0] || null;
+}
+
+// sequenza dei periodi (normale compreso) da un giorno in avanti, per la card
+function calendario(dal, giorni = 366) {
+  const out = [], d = new Date(dal.getFullYear(), dal.getMonth(), dal.getDate());
+  for (let i = 0; i < giorni; i++) {
+    const p = periodoDelGiorno(d), id = p ? p.id : 'normale', ultimo = out[out.length - 1];
+    if (ultimo && ultimo.id === id) ultimo.fine = new Date(d);
+    else out.push({ id, periodo: p, inizio: new Date(d), fine: new Date(d) });
+    d.setDate(d.getDate() + 1);
+  }
+  return out;
+}
+
+// giorni cuscinetto: quando si passa direttamente da un periodo a un altro, i primi N giorni
+// (impostazioni.json -> giorni_normale, minimo 1) sono "normale". Cosi' tra due addobbi c'e' sempre una pausa.
+function periodoDelGiorno(oggi) {
+  const p = vincitore(oggi);
+  if (!p) return null;
+  const N = Math.max(1, MANUALE.giorni_normale ?? IMPOSTAZIONI.giorni_normale ?? 1), d = new Date(oggi);
+  for (let k = 0; k < N; k++) { // risale ai giorni precedenti finche' c'e' lo stesso periodo
+    d.setDate(d.getDate() - 1);
+    const prima = vincitore(d);
+    if (prima !== p) return prima ? null : p; // iniziato da meno di N giorni dopo un altro periodo -> normale
+  }
+  return p;
+}
+
+function aggiorna() {
+  if (!document.body) return;
+  const p = scegli(), dark = modoScuro(), k = (p ? p.id : '-') + '|' + dark;
+  if (k === chiave) return;
+  chiave = k; smonta();
+  if (p) { monta(p, dark); console.info(`%c ${ID} ${VERSIONE} %c ${p.nome} (${dark ? 'dark' : 'light'})`, 'background:#555;color:#fff', ''); }
+}
+
+if (!window.__seasonalGlass) {
+  window.__seasonalGlass = { aggiorna, periodi: PERIODI, versione: VERSIONE, calendario, impostaManuale };
+  // HA applica i temi come style inline su <html>: osservarlo intercetta subito il cambio light/dark
+  new MutationObserver(() => aggiorna()).observe(document.documentElement, { attributes: true, attributeFilter: ['style', 'class'] });
+  setInterval(aggiorna, 30000);
+  addEventListener('location-changed', aggiorna);
+  if (document.readyState === 'loading') addEventListener('DOMContentLoaded', aggiorna); else aggiorna();
+  // impostazioni manuali: subito, appena hass e' pronto, poi ogni 2 minuti
+  let tentativi = 0;
+  const primo = setInterval(() => {
+    if (document.querySelector('home-assistant')?.hass?.connection || ++tentativi > 30) { clearInterval(primo); caricaManuale(); }
+  }, 1000);
+  caricaManuale(); // subito l'integrazione (anche sul kiosk), poi di nuovo quando hass e' pronto
+  setInterval(caricaManuale, 120000);
+  definisciCard();
+}
+
+// ---------- card "custom:seasonal-glass-card": calendario calcolato + modifiche manuali ----------
+function definisciCard() {
+  if (!window.customElements || customElements.get('seasonal-glass-card')) return;
+  const fmt = d => d.toLocaleDateString('it-IT', { day: 'numeric', month: 'short' });
+  const durata = s => Math.round((s.fine - s.inizio) / 864e5) + 1;
+
+  class SeasonalGlassCard extends HTMLElement {
+    setConfig(c) {
+      this.cfg = c || {};
+      impostaManuale(pick(this.cfg, 'periodi', 'giorni_normale', 'movimento')); // effetto immediato su questo dispositivo
+      this.disegna();
+    }
+    set hass(h) { if (!this.root) this.disegna(); }
+    connectedCallback() { this._ev = () => this.disegna(); addEventListener('seasonal-glass-cambiato', this._ev); }
+    disconnectedCallback() { removeEventListener('seasonal-glass-cambiato', this._ev); }
+    getCardSize() { return 6; }
+    static getStubConfig() { return { mostra: 12 }; }
+
+    disegna() {
+      if (!this.root) this.root = this.attachShadow({ mode: 'open' });
+      const cal = calendario(new Date()).slice(0, this.cfg?.mostra || 12);
+      let forzato = null; try { forzato = localStorage.getItem('addobbi'); } catch (e) { /* storage non disponibile */ }
+      const attuale = scegli(), dark = modoScuro();
+      const riga = (s, i) => {
+        const p = s.periodo;
+        return `<div class="r ${p ? '' : 'norm'} ${i === 0 ? 'ora' : ''}">
+          <span class="n">${p ? `${p.icona || ''} ${p.nome}` : 'Normale'}${p?.manuale ? ' <b class="man" title="modificato a mano nella card">manuale</b>' : ''}</span>
+          <span class="d">${i === 0 ? 'fino al ' + fmt(s.fine) : fmt(s.inizio) + (durata(s) > 1 ? ' → ' + fmt(s.fine) : '')}</span>
+          <span class="g">${durata(s)} g</span>
+          ${p ? `<button data-p="${p.id}" title="anteprima su questo dispositivo">👁</button>` : '<span></span>'}</div>`;
+      };
+      this.root.innerHTML = `<style>
+        ha-card{display:block;padding:16px}
+        h2{margin:0 0 4px;font-size:18px;font-weight:500}
+        .sub{color:var(--secondary-text-color);font-size:13px;margin-bottom:12px}
+        .r{display:grid;grid-template-columns:1fr auto 40px 30px;gap:8px;align-items:center;padding:7px 2px;border-bottom:1px solid var(--divider-color)}
+        .r:last-of-type{border:0}
+        .norm{color:var(--secondary-text-color);font-size:13px}
+        .ora .n{font-weight:600;color:var(--primary-color)}
+        .d,.g{font-variant-numeric:tabular-nums;font-size:13px}.g{text-align:right;color:var(--secondary-text-color)}
+        .man{font-size:10px;font-weight:600;padding:1px 6px;border-radius:8px;background:var(--accent-color);color:#fff;vertical-align:middle}
+        button{border:0;background:none;cursor:pointer;font-size:15px;opacity:.6;padding:2px}button:hover{opacity:1}
+        .barra{display:flex;gap:8px;align-items:center;justify-content:space-between;margin-top:10px;font-size:13px;color:var(--secondary-text-color)}
+        .barra button{font-size:13px;opacity:1;padding:6px 12px;border-radius:10px;background:var(--primary-color);color:var(--text-primary-color,#fff)}
+      </style><ha-card>
+        <h2>Addobbi stagionali</h2>
+        <div class="sub">Ora: <b>${attuale ? attuale.nome : 'normale'}</b> · ${dark ? 'dark' : 'light'}${forzato ? ' · <b>anteprima forzata su questo dispositivo</b>' : ''}</div>
+        ${cal.map(riga).join('')}
+        <div class="barra"><span>${MANUALE.periodi || MANUALE.giorni_normale ? 'Calendario con modifiche manuali' : 'Calendario automatico'}</span>
+        ${forzato ? '<button id="auto">Torna automatico</button>' : ''}</div>
+      </ha-card>`;
+      this.root.querySelectorAll('button[data-p]').forEach(b => { b.onclick = () => this.forza(b.dataset.p); });
+      const a = this.root.getElementById('auto'); if (a) a.onclick = () => this.forza(null);
+    }
+
+    forza(id) { // anteprima solo su questo dispositivo (localStorage)
+      try { if (id) localStorage.setItem('addobbi', id); else localStorage.removeItem('addobbi'); } catch (e) { /* */ }
+      chiave = null; aggiorna(); this.disegna();
+    }
+  }
+  customElements.define('seasonal-glass-card', SeasonalGlassCard);
+  (window.customCards = window.customCards || []).push({
+    type: 'seasonal-glass-card', name: 'Seasonal Glass', description: 'Calendario degli addobbi stagionali, modificabile a mano',
+  });
+}
+
+document.getElementById('info').textContent = 'periodi: ' + PERIODI.map(p => p.nome).join(', ');
+const card = document.createElement('seasonal-glass-card');
+const man = new URLSearchParams(location.search).get('manuale');
+card.setConfig(man ? JSON.parse(man) : { mostra: 12 });
+document.getElementById('cal').appendChild(card);
+</script>
+</body></html>

@@ -1,0 +1,33 @@
+{
+  "nome": "Autunno",
+  "icona": "🍂",
+  "priorita": 10,
+  "date": {
+    "da": "09-12",
+    "a": "12-10"
+  },
+  "colori": {
+    "light": {
+      "primary-color": "#c0612b",
+      "accent-color": "#8a5a2b"
+    },
+    "dark": {
+      "primary-color": "#e88a4a",
+      "accent-color": "#d4a24c"
+    }
+  },
+  "velatura": {
+    "light": "linear-gradient(160deg, rgba(200,110,40,.24), rgba(140,80,30,.16))",
+    "dark": "linear-gradient(160deg, rgba(130,60,20,.26), rgba(70,35,10,.22))"
+  },
+  "effetti": [
+    {
+      "tipo": "fogliame"
+    },
+    {
+      "tipo": "foglie",
+      "quantita": 10,
+      "opacita": 0.6
+    }
+  ]
+}

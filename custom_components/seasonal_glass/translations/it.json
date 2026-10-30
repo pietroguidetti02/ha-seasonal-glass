@@ -1,0 +1,88 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Seasonal Glass",
+        "description": "Aggiunge gli addobbi stagionali automatici alle dashboard."
+      }
+    },
+    "abort": {
+      "single_instance_allowed": "Seasonal Glass e' gia' configurato."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Seasonal Glass",
+        "description": "Cosa vuoi modificare? Ricordati di premere **Salva** alla fine.",
+        "menu_options": {
+          "generale": "Generale",
+          "date": "Date dei periodi",
+          "colori": "Colori",
+          "salva": "Salva e chiudi"
+        }
+      },
+      "generale": {
+        "title": "Generale",
+        "data": {
+          "movimento": "Animazioni",
+          "giorni_normale": "Giorni normali tra due addobbi",
+          "attivi": "Periodi attivi"
+        }
+      },
+      "date": {
+        "title": "Date dei periodi",
+        "description": "Lascia vuoto per il calendario automatico. Formato: `MM-GG` (es. `10-20`) oppure `P-10` / `P+3` = giorni da Pasqua. Se un periodo segue subito un altro, compare dopo i giorni normali.\n\nDate automatiche:\n{automatiche}",
+        "data": {
+          "autunno_da": "🍂 Autunno - inizio",
+          "autunno_a": "🍂 Autunno - fine",
+          "carnevale_da": "🎭 Carnevale - inizio",
+          "carnevale_a": "🎭 Carnevale - fine",
+          "estate_da": "☀️ Estate - inizio",
+          "estate_a": "☀️ Estate - fine",
+          "halloween_da": "🎃 Halloween - inizio",
+          "halloween_a": "🎃 Halloween - fine",
+          "inverno_da": "❄️ Inverno - inizio",
+          "inverno_a": "❄️ Inverno - fine",
+          "natale_da": "🎄 Natale - inizio",
+          "natale_a": "🎄 Natale - fine",
+          "pasqua_da": "🐣 Pasqua - inizio",
+          "pasqua_a": "🐣 Pasqua - fine",
+          "primavera_da": "🌱 Primavera - inizio",
+          "primavera_a": "🌱 Primavera - fine"
+        }
+      },
+      "colori": {
+        "title": "Colori",
+        "description": "Scegli il periodo di cui cambiare i colori (✎ = modificato).",
+        "data": {
+          "periodo": "Periodo"
+        }
+      },
+      "colori_periodo": {
+        "title": "Colori",
+        "description": "{periodo}. **Colore principale**: pulsanti, interruttori, accenti. **Velatura**: tinta semitrasparente stesa sopra lo sfondo; se scegli solo l'intensita' usa il colore principale. Intensita' 0 = nessuna velatura. Lascia vuoto per i valori predefiniti.",
+        "data": {
+          "principale_light": "Colore principale (tema chiaro)",
+          "principale_dark": "Colore principale (tema scuro)",
+          "velatura_light": "Velatura (tema chiaro)",
+          "velatura_dark": "Velatura (tema scuro)",
+          "intensita": "Intensita' velatura",
+          "ripristina": "Ripristina i colori predefiniti"
+        }
+      }
+    },
+    "error": {
+      "data_non_valida": "Data non valida: usa MM-GG oppure P-10 / P+3"
+    }
+  },
+  "selector": {
+    "movimento": {
+      "options": {
+        "sempre": "Sempre",
+        "auto": "Segui il dispositivo (riduci movimento)",
+        "mai": "Mai (immagine ferma)"
+      }
+    }
+  }
+}

@@ -1,0 +1,34 @@
+{
+  "nome": "Pasqua",
+  "icona": "🐣",
+  "priorita": 25,
+  "date": {
+    "pasqua": [
+      -11,
+      1
+    ]
+  },
+  "colori": {
+    "light": {
+      "primary-color": "#8e6fd1",
+      "accent-color": "#e57fa5"
+    },
+    "dark": {
+      "primary-color": "#b9a3f0",
+      "accent-color": "#f7b8cf"
+    }
+  },
+  "velatura": {
+    "light": "linear-gradient(160deg, rgba(255,200,230,.30), rgba(200,240,190,.25))",
+    "dark": "linear-gradient(160deg, rgba(150,80,130,.22), rgba(60,110,70,.22))"
+  },
+  "effetti": [
+    {
+      "tipo": "uova"
+    },
+    {
+      "tipo": "petali",
+      "quantita": 10
+    }
+  ]
+}

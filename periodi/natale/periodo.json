@@ -1,0 +1,39 @@
+{
+  "nome": "Natale",
+  "icona": "🎄",
+  "priorita": 30,
+  "date": {
+    "da": "11-30",
+    "a": "01-06"
+  },
+  "colori": {
+    "light": {
+      "primary-color": "#c0392b",
+      "accent-color": "#1e7d4f"
+    },
+    "dark": {
+      "primary-color": "#ff5a4f",
+      "accent-color": "#3fbf7f"
+    }
+  },
+  "velatura": {
+    "light": "linear-gradient(160deg, rgba(200,30,40,.22), rgba(30,120,60,.18))",
+    "dark": "linear-gradient(160deg, rgba(160,20,30,.28), rgba(10,70,40,.28))"
+  },
+  "effetti": [
+    {
+      "tipo": "lucine",
+      "stile": "filo",
+      "quantita": 24
+    },
+    {
+      "tipo": "lucine",
+      "stile": "bokeh",
+      "quantita": 16
+    },
+    {
+      "tipo": "neve",
+      "quantita": 45
+    }
+  ]
+}

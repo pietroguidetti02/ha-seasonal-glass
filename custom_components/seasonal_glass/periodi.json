@@ -1,0 +1,192 @@
+[
+ {
+  "id": "autunno",
+  "nome": "Autunno",
+  "icona": "🍂",
+  "date": {
+   "da": "09-12",
+   "a": "12-10"
+  },
+  "colori": {
+   "light": {
+    "primary-color": "#c0612b",
+    "accent-color": "#8a5a2b"
+   },
+   "dark": {
+    "primary-color": "#e88a4a",
+    "accent-color": "#d4a24c"
+   }
+  },
+  "velatura": {
+   "light": "linear-gradient(160deg, rgba(200,110,40,.24), rgba(140,80,30,.16))",
+   "dark": "linear-gradient(160deg, rgba(130,60,20,.26), rgba(70,35,10,.22))"
+  }
+ },
+ {
+  "id": "carnevale",
+  "nome": "Carnevale",
+  "icona": "🎭",
+  "date": {
+   "da": {
+    "pasqua": -53
+   },
+   "a": {
+    "pasqua": -47
+   }
+  },
+  "colori": {
+   "light": {
+    "primary-color": "#d6336c",
+    "accent-color": "#f59f00"
+   },
+   "dark": {
+    "primary-color": "#ff6b9d",
+    "accent-color": "#ffd43b"
+   }
+  },
+  "velatura": {
+   "light": "linear-gradient(135deg, rgba(255,80,160,.20), rgba(80,170,255,.20))",
+   "dark": "linear-gradient(135deg, rgba(180,40,120,.22), rgba(40,90,180,.22))"
+  }
+ },
+ {
+  "id": "estate",
+  "nome": "Estate",
+  "icona": "☀️",
+  "date": {
+   "da": "06-11",
+   "a": "09-11"
+  },
+  "colori": {
+   "light": {
+    "primary-color": "#0e9aa7",
+    "accent-color": "#f6a821"
+   },
+   "dark": {
+    "primary-color": "#3fd0dc",
+    "accent-color": "#ffc04d"
+   }
+  },
+  "velatura": {
+   "light": "linear-gradient(160deg, rgba(255,210,80,.22), rgba(60,180,220,.18))",
+   "dark": "linear-gradient(160deg, rgba(20,60,120,.25), rgba(10,90,100,.20))"
+  }
+ },
+ {
+  "id": "halloween",
+  "nome": "Halloween",
+  "icona": "🎃",
+  "date": {
+   "da": "10-20",
+   "a": "11-02"
+  },
+  "colori": {
+   "light": {
+    "primary-color": "#e8730c",
+    "accent-color": "#7b3fa0"
+   },
+   "dark": {
+    "primary-color": "#ff8c1a",
+    "accent-color": "#a66bd3"
+   }
+  },
+  "velatura": {
+   "light": "linear-gradient(160deg, rgba(255,140,30,.38), rgba(232,115,12,.22) 55%, rgba(123,63,160,.20))",
+   "dark": "linear-gradient(160deg, rgba(255,120,0,.30), rgba(120,40,0,.25) 55%, rgba(80,20,110,.30))"
+  }
+ },
+ {
+  "id": "inverno",
+  "nome": "Inverno",
+  "icona": "❄️",
+  "date": {
+   "da": "12-11",
+   "a": "03-09"
+  },
+  "colori": {
+   "light": {
+    "primary-color": "#3b7fc4",
+    "accent-color": "#7aa9d6"
+   },
+   "dark": {
+    "primary-color": "#7fb8ff",
+    "accent-color": "#b8d8ff"
+   }
+  },
+  "velatura": {
+   "light": "linear-gradient(160deg, rgba(180,215,255,.28), rgba(240,248,255,.18))",
+   "dark": "linear-gradient(160deg, rgba(30,60,120,.28), rgba(10,25,60,.25))"
+  }
+ },
+ {
+  "id": "natale",
+  "nome": "Natale",
+  "icona": "🎄",
+  "date": {
+   "da": "11-30",
+   "a": "01-06"
+  },
+  "colori": {
+   "light": {
+    "primary-color": "#c0392b",
+    "accent-color": "#1e7d4f"
+   },
+   "dark": {
+    "primary-color": "#ff5a4f",
+    "accent-color": "#3fbf7f"
+   }
+  },
+  "velatura": {
+   "light": "linear-gradient(160deg, rgba(200,30,40,.22), rgba(30,120,60,.18))",
+   "dark": "linear-gradient(160deg, rgba(160,20,30,.28), rgba(10,70,40,.28))"
+  }
+ },
+ {
+  "id": "pasqua",
+  "nome": "Pasqua",
+  "icona": "🐣",
+  "date": {
+   "pasqua": [
+    -11,
+    1
+   ]
+  },
+  "colori": {
+   "light": {
+    "primary-color": "#8e6fd1",
+    "accent-color": "#e57fa5"
+   },
+   "dark": {
+    "primary-color": "#b9a3f0",
+    "accent-color": "#f7b8cf"
+   }
+  },
+  "velatura": {
+   "light": "linear-gradient(160deg, rgba(255,200,230,.30), rgba(200,240,190,.25))",
+   "dark": "linear-gradient(160deg, rgba(150,80,130,.22), rgba(60,110,70,.22))"
+  }
+ },
+ {
+  "id": "primavera",
+  "nome": "Primavera",
+  "icona": "🌱",
+  "date": {
+   "da": "03-10",
+   "a": "06-10"
+  },
+  "colori": {
+   "light": {
+    "primary-color": "#4caf50",
+    "accent-color": "#e57fa5"
+   },
+   "dark": {
+    "primary-color": "#7ed67f",
+    "accent-color": "#f7a8c4"
+   }
+  },
+  "velatura": {
+   "light": "linear-gradient(160deg, rgba(150,220,120,.22), rgba(255,220,235,.18))",
+   "dark": "linear-gradient(160deg, rgba(40,110,50,.22), rgba(90,50,80,.15))"
+  }
+ }
+]

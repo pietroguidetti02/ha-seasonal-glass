@@ -1,0 +1,8 @@
+Ogni cartella = un periodo. Per aggiungerne uno: copia una cartella, rinominala, modifica periodo.json,
+poi lancia  python build.py  (o  python build.py --ha  per copiarlo anche in Home Assistant).
+Immagini opzionali nella cartella del periodo:
+  sfondo.png (entrambi i modi)  oppure  sfondo-light.png + sfondo-dark.png
+  decorazioni/alto-sinistra.png, alto-destra.png, basso-sinistra.png, basso-destra.png,
+              alto-centro.png, basso-centro.png   (variante buio: alto-sinistra.dark.png)
+Cartelle che iniziano con _ vengono ignorate (utile per disattivare un periodo).
+Dettagli: ../PROGETTO.md

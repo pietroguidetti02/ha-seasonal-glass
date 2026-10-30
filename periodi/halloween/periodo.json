@@ -1,0 +1,37 @@
+{
+  "nome": "Halloween",
+  "icona": "🎃",
+  "priorita": 20,
+  "date": {
+    "da": "10-20",
+    "a": "11-02"
+  },
+  "colori": {
+    "light": {
+      "primary-color": "#e8730c",
+      "accent-color": "#7b3fa0"
+    },
+    "dark": {
+      "primary-color": "#ff8c1a",
+      "accent-color": "#a66bd3"
+    }
+  },
+  "velatura": {
+    "light": "linear-gradient(160deg, rgba(255,140,30,.38), rgba(232,115,12,.22) 55%, rgba(123,63,160,.20))",
+    "dark": "linear-gradient(160deg, rgba(255,120,0,.30), rgba(120,40,0,.25) 55%, rgba(80,20,110,.30))"
+  },
+  "effetti": [
+    {
+      "tipo": "ragnatele",
+      "angoli": [
+        "alto-sinistra",
+        "alto-destra"
+      ],
+      "ragno": true
+    },
+    {
+      "tipo": "pipistrelli",
+      "quantita": 3
+    }
+  ]
+}

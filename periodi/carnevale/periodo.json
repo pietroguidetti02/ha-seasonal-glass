@@ -1,0 +1,33 @@
+{
+  "nome": "Carnevale",
+  "icona": "🎭",
+  "priorita": 25,
+  "date": {
+    "da": {
+      "pasqua": -53
+    },
+    "a": {
+      "pasqua": -47
+    }
+  },
+  "colori": {
+    "light": {
+      "primary-color": "#d6336c",
+      "accent-color": "#f59f00"
+    },
+    "dark": {
+      "primary-color": "#ff6b9d",
+      "accent-color": "#ffd43b"
+    }
+  },
+  "velatura": {
+    "light": "linear-gradient(135deg, rgba(255,80,160,.20), rgba(80,170,255,.20))",
+    "dark": "linear-gradient(135deg, rgba(180,40,120,.22), rgba(40,90,180,.22))"
+  },
+  "effetti": [
+    {
+      "tipo": "coriandoli",
+      "quantita": 35
+    }
+  ]
+}

@@ -1,0 +1,30 @@
+{
+  "nome": "Inverno",
+  "icona": "❄️",
+  "priorita": 10,
+  "date": {
+    "da": "12-11",
+    "a": "03-09"
+  },
+  "colori": {
+    "light": {
+      "primary-color": "#3b7fc4",
+      "accent-color": "#7aa9d6"
+    },
+    "dark": {
+      "primary-color": "#7fb8ff",
+      "accent-color": "#b8d8ff"
+    }
+  },
+  "velatura": {
+    "light": "linear-gradient(160deg, rgba(180,215,255,.28), rgba(240,248,255,.18))",
+    "dark": "linear-gradient(160deg, rgba(30,60,120,.28), rgba(10,25,60,.25))"
+  },
+  "effetti": [
+    {
+      "tipo": "neve",
+      "quantita": 25,
+      "opacita": 0.6
+    }
+  ]
+}

@@ -1,0 +1,88 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Seasonal Glass",
+        "description": "Adds automatic seasonal decorations to your dashboards."
+      }
+    },
+    "abort": {
+      "single_instance_allowed": "Seasonal Glass is already configured."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Seasonal Glass",
+        "description": "What do you want to change? Remember to press **Save** at the end.",
+        "menu_options": {
+          "generale": "General",
+          "date": "Period dates",
+          "colori": "Colors",
+          "salva": "Save and close"
+        }
+      },
+      "generale": {
+        "title": "General",
+        "data": {
+          "movimento": "Animations",
+          "giorni_normale": "Normal days between two decorations",
+          "attivi": "Active periods"
+        }
+      },
+      "date": {
+        "title": "Period dates",
+        "description": "Leave empty for the automatic calendar. Format: `MM-DD` (e.g. `10-20`) or `P-10` / `P+3` = days from Easter. If a period directly follows another, it appears after the normal days.\n\nAutomatic dates:\n{automatiche}",
+        "data": {
+          "autunno_da": "🍂 Autunno - start",
+          "autunno_a": "🍂 Autunno - end",
+          "carnevale_da": "🎭 Carnevale - start",
+          "carnevale_a": "🎭 Carnevale - end",
+          "estate_da": "☀️ Estate - start",
+          "estate_a": "☀️ Estate - end",
+          "halloween_da": "🎃 Halloween - start",
+          "halloween_a": "🎃 Halloween - end",
+          "inverno_da": "❄️ Inverno - start",
+          "inverno_a": "❄️ Inverno - end",
+          "natale_da": "🎄 Natale - start",
+          "natale_a": "🎄 Natale - end",
+          "pasqua_da": "🐣 Pasqua - start",
+          "pasqua_a": "🐣 Pasqua - end",
+          "primavera_da": "🌱 Primavera - start",
+          "primavera_a": "🌱 Primavera - end"
+        }
+      },
+      "colori": {
+        "title": "Colors",
+        "description": "Pick the period whose colors you want to change (✎ = changed).",
+        "data": {
+          "periodo": "Period"
+        }
+      },
+      "colori_periodo": {
+        "title": "Colors",
+        "description": "{periodo}. **Main color**: buttons, switches, accents. **Tint**: semi-transparent color laid over the background; with only an intensity it uses the main color. Intensity 0 = no tint. Leave empty for the defaults.",
+        "data": {
+          "principale_light": "Main color (light theme)",
+          "principale_dark": "Main color (dark theme)",
+          "velatura_light": "Tint (light theme)",
+          "velatura_dark": "Tint (dark theme)",
+          "intensita": "Tint intensity",
+          "ripristina": "Restore default colors"
+        }
+      }
+    },
+    "error": {
+      "data_non_valida": "Invalid date: use MM-DD or P-10 / P+3"
+    }
+  },
+  "selector": {
+    "movimento": {
+      "options": {
+        "sempre": "Always",
+        "auto": "Follow the device (reduce motion)",
+        "mai": "Never (still image)"
+      }
+    }
+  }
+}

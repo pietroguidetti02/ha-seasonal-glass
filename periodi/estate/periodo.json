@@ -1,0 +1,30 @@
+{
+  "nome": "Estate",
+  "icona": "☀️",
+  "priorita": 10,
+  "date": {
+    "da": "06-11",
+    "a": "09-11"
+  },
+  "colori": {
+    "light": {
+      "primary-color": "#0e9aa7",
+      "accent-color": "#f6a821"
+    },
+    "dark": {
+      "primary-color": "#3fd0dc",
+      "accent-color": "#ffc04d"
+    }
+  },
+  "velatura": {
+    "light": "linear-gradient(160deg, rgba(255,210,80,.22), rgba(60,180,220,.18))",
+    "dark": "linear-gradient(160deg, rgba(20,60,120,.25), rgba(10,90,100,.20))"
+  },
+  "effetti": [
+    {
+      "tipo": "lucciole",
+      "quantita": 14,
+      "solo": "dark"
+    }
+  ]
+}

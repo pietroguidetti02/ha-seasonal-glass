@@ -1,0 +1,38 @@
+{
+  "nome": "Primavera",
+  "icona": "🌱",
+  "priorita": 10,
+  "date": {
+    "da": "03-10",
+    "a": "06-10"
+  },
+  "colori": {
+    "light": {
+      "primary-color": "#4caf50",
+      "accent-color": "#e57fa5"
+    },
+    "dark": {
+      "primary-color": "#7ed67f",
+      "accent-color": "#f7a8c4"
+    }
+  },
+  "velatura": {
+    "light": "linear-gradient(160deg, rgba(150,220,120,.22), rgba(255,220,235,.18))",
+    "dark": "linear-gradient(160deg, rgba(40,110,50,.22), rgba(90,50,80,.15))"
+  },
+  "effetti": [
+    {
+      "tipo": "germogli"
+    },
+    {
+      "tipo": "petali",
+      "quantita": 10,
+      "colori": [
+        "#f7c6d9",
+        "#ffffff",
+        "#fbd3e0",
+        "#e8f5c8"
+      ]
+    }
+  ]
+}

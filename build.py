@@ -189,7 +189,7 @@ def integrazione(periodi):
     if www.exists():
         shutil.rmtree(www)
     shutil.copytree(DIST, www)
-    elenco = [{k: p[k] for k in ("id", "nome", "icona", "date", "colori", "velatura") if k in p} for p in periodi]
+    elenco = [{k: p[k] for k in ("id", "nome", "icona", "priorita", "date", "colori", "velatura") if k in p} for p in periodi]
     (CC / "periodi.json").write_text(json.dumps(elenco, ensure_ascii=False, indent=1), encoding="utf-8")
 
     testi = {
@@ -198,7 +198,7 @@ def integrazione(periodi):
             "solo_una": "Seasonal Glass e' gia' configurato.",
             "menu": "Cosa vuoi modificare? Ricordati di premere **Salva** alla fine.",
             "generale": "Generale", "date": "Date dei periodi", "salva": "Salva e chiudi",
-            "movimento": "Animazioni", "giorni_normale": "Giorni normali tra due addobbi", "attivi": "Periodi attivi",
+            "movimento": "Animazioni", "giorni_normale": "Giorni normali tra due addobbi", "attivi": "Periodi attivi", "notifica": "Notifica quando cambia l'addobbo",
             "desc_date": "Lascia vuoto per il calendario automatico. Formato: `MM-GG` (es. `10-20`) oppure "
                          "`P-10` / `P+3` = giorni da Pasqua. Se un periodo segue subito un altro, compare dopo "
                          "i giorni normali.\n\nDate automatiche:\n{automatiche}",
@@ -217,7 +217,7 @@ def integrazione(periodi):
             "solo_una": "Seasonal Glass is already configured.",
             "menu": "What do you want to change? Remember to press **Save** at the end.",
             "generale": "General", "date": "Period dates", "salva": "Save and close",
-            "movimento": "Animations", "giorni_normale": "Normal days between two decorations", "attivi": "Active periods",
+            "movimento": "Animations", "giorni_normale": "Normal days between two decorations", "attivi": "Active periods", "notifica": "Notify when the decoration changes",
             "desc_date": "Leave empty for the automatic calendar. Format: `MM-DD` (e.g. `10-20`) or "
                          "`P-10` / `P+3` = days from Easter. If a period directly follows another, it appears "
                          "after the normal days.\n\nAutomatic dates:\n{automatiche}",
@@ -245,7 +245,7 @@ def integrazione(periodi):
                     "init": {"title": t["titolo"], "description": t["menu"],
                              "menu_options": {"generale": t["generale"], "date": t["date"], "colori": t["colori"], "salva": t["salva"]}},
                     "generale": {"title": t["generale"], "data": {
-                        "movimento": t["movimento"], "giorni_normale": t["giorni_normale"], "attivi": t["attivi"]}},
+                        "movimento": t["movimento"], "giorni_normale": t["giorni_normale"], "attivi": t["attivi"], "notifica": t["notifica"]}},
                     "date": {"title": t["date"], "description": t["desc_date"], "data": campi_date},
                     "colori": {"title": t["colori"], "description": t["desc_colori"],
                                "data": {"periodo": t["scegli_periodo"]}},

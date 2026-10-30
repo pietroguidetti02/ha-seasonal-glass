@@ -27,7 +27,8 @@
         "data": {
           "movimento": "Animations",
           "giorni_normale": "Normal days between two decorations",
-          "attivi": "Active periods"
+          "attivi": "Active periods",
+          "notifica": "Notify when the decoration changes"
         }
       },
       "date": {

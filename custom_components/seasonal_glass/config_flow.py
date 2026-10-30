@@ -56,6 +56,7 @@ class SeasonalGlassOptionsFlow(OptionsFlow):
                 selector.SelectSelectorConfig(
                     options=[{"value": p["id"], "label": f"{p.get('icona', '')} {p['nome']}".strip()} for p in PERIODI],
                     multiple=True, mode=selector.SelectSelectorMode.LIST)),
+            vol.Required("notifica", default=o.get("notifica", True)): selector.BooleanSelector(),
         })
         return self.async_show_form(step_id="generale", data_schema=schema)
 

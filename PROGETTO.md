@@ -135,6 +135,12 @@ export default function (ctx) {
   Un periodo nuovo compare da solo anche nei menu di Configura.
 - `hacs.json` in radice: repo HACS di categoria Integration.
 - Provata il 30/10/2026: import + conversione date dentro il container HA 2026.10.4 (copia in /tmp, poi rimossa).
+- `sensor.py` + `calendario.py` (0.1.4): sensore `sensor.seasonal_glass_periodo` (stato = nome del periodo o
+  "Normale", attributi id/icona), ricalcolato alle 00:00:10 e quando cambiano le opzioni. Se cambia e l'opzione
+  Generale -> "Notifica quando cambia l'addobbo" e' attiva (predefinito si') crea una notifica interna di HA.
+  `calendario.py` e' la copia in Python della logica di core.js (vincitore per priorita' + giorni normali):
+  se si cambia una delle due, cambiare anche l'altra. Usa solo le opzioni dell'integrazione, NON lo YAML della card.
+  Stato precedente ripristinato al riavvio (RestoreEntity): niente notifiche doppie.
 - `python build.py --ha` copia l'integrazione in `C:\DockerConfig\HA\custom_components\seasonal_glass` (poi riavvio).
 - Animazioni: il server di casa ha gli effetti visivi di Windows disattivati -> il browser segnala
   "riduci movimento". Per questo il predefinito e' `movimento: sempre` e non `auto`.
@@ -179,6 +185,11 @@ Non e' una dashboard Lovelace, quindi va incluso a mano nella pagina:
 - [x] Kiosk/screensaver Chromecast: plugin incluso + variabili `--seasonal-glass-velatura/colore`.
 - [ ] Immagini dell'utente (sfondi): solo proprie / generate / licenza libera.
 - [x] Integrazione con menu Configura (al posto della risorsa manuale).
+- [x] 0.1.4 (31/10/2026): sensore periodo + notifica al cambio; ragnatela destra di Halloween a semicerchio
+      (`forme: {"alto-destra": "semicerchio"}`, anche `allungata`), ragno che scende di piu'; palline di Natale
+      appese ai lati che dondolano (effetto `palline`). Kiosk invariato: effetti con `"kiosk": false` e le
+      `forme` non si applicano dove la pagina imposta `window.seasonalGlass.modo`.
+- [ ] Pubblicare la 0.1.4: push -> Validate verde -> release v0.1.4 (vedi sotto). Rifare le GIF di halloween/natale.
 - [x] Installata in HA locale (v0.1.3): velatura sfondo + menu Configura -> Colori + icone brand.
 - [x] Pubblicata su GitHub (30/10/2026): https://github.com/pietroguidetti02/ha-seasonal-glass (pubblico,
       8 topic, release v0.1.3, GIF dei periodi in `docs/`, invito alla stella in fondo al README).

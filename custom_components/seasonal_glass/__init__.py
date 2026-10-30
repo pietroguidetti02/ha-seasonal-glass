@@ -4,7 +4,8 @@ L'integrazione:
 - serve i file del plugin (cartella www/) su /seasonal_glass/ e lo carica in ogni pagina del frontend
   (niente risorsa Lovelace da aggiungere a mano);
 - espone le impostazioni scelte da "Configura" su /api/seasonal_glass/config (senza login: sono solo
-  date e preferenze grafiche, cosi' le legge anche la pagina kiosk).
+  date e preferenze grafiche, cosi' le legge anche la pagina kiosk);
+- crea il sensore "Periodo" (sensor.py), che avvisa con una notifica interna quando l'addobbo cambia.
 """
 from __future__ import annotations
 
@@ -34,6 +35,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
         dati["registrato"] = True
     dati["opzioni"] = dict(entry.options)
     entry.async_on_unload(entry.add_update_listener(_opzioni_cambiate))
+    await hass.config_entries.async_forward_entry_setups(entry, ["sensor"])
     return True
 
 
@@ -44,7 +46,7 @@ async def _opzioni_cambiate(hass: HomeAssistant, entry: ConfigEntry) -> None:
 async def async_unload_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     # lo script resta caricato fino al riavvio, ma senza impostazioni torna al calendario automatico
     hass.data[DOMAIN]["opzioni"] = {}
-    return True
+    return await hass.config_entries.async_unload_platforms(entry, ["sensor"])
 
 
 class ConfigView(HomeAssistantView):

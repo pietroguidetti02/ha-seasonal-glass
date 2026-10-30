@@ -27,7 +27,10 @@
         "alto-sinistra",
         "alto-destra"
       ],
-      "ragno": true
+      "ragno": true,
+      "forme": {
+        "alto-destra": "semicerchio"
+      }
     },
     {
       "tipo": "pipistrelli",

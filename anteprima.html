@@ -172,7 +172,10 @@ const PERIODI = [
      "alto-sinistra",
      "alto-destra"
     ],
-    "ragno": true
+    "ragno": true,
+    "forme": {
+     "alto-destra": "semicerchio"
+    }
    },
    {
     "tipo": "pipistrelli",
@@ -240,6 +243,11 @@ const PERIODI = [
     "tipo": "lucine",
     "stile": "filo",
     "quantita": 24
+   },
+   {
+    "tipo": "palline",
+    "quantita": 3,
+    "kiosk": false
    },
    {
     "tipo": "lucine",
@@ -336,7 +344,7 @@ const CUSTOM = {
 /* Seasonal Glass - motore del plugin.
  * build.py antepone: const BASE, const PERIODI, const CUSTOM.
  * Tutto cio' che disegna sta in un livello fisso con pointer-events:none: non blocca mai i tocchi. */
-const VERSIONE = '0.1.0';
+const VERSIONE = '0.1.4';
 const ID = 'seasonal-glass';
 
 // ---------- date ----------
@@ -492,23 +500,34 @@ const EFFETTI = {
   ragnatele(ctx, o) {
     const col = ctx.dark ? `rgba(235,235,245,${o.opacita ?? 0.4})` : `rgba(50,50,60,${o.opacita ?? 0.4})`;
     const L = 200, raggi = 7, anelli = 6;
-    const punto = (r, i) => { const a = (i / (raggi - 1)) * Math.PI / 2; return [Math.cos(a) * r, Math.sin(a) * r]; };
-    let d = '';
-    for (let i = 0; i < raggi; i++) { const [x, y] = punto(L, i); d += `M0 0L${x.toFixed(1)} ${y.toFixed(1)}`; }
-    for (let k = 1; k <= anelli; k++) {
-      const r = (L / anelli) * k * 0.95;
-      for (let i = 0; i < raggi - 1; i++) {
-        const [x1, y1] = punto(r, i), [x2, y2] = punto(r, i + 1);
-        d += `M${x1.toFixed(1)} ${y1.toFixed(1)}Q${((x1 + x2) * 0.42).toFixed(1)} ${((y1 + y2) * 0.42).toFixed(1)} ${x2.toFixed(1)} ${y2.toFixed(1)}`;
+    // tela disegnata per l'angolo alto-sinistra (gli altri angoli la specchiano); centro (cx,cy), raggi da a0 ad a1, k = allungamento verso il basso
+    const tela = (cx, cy, a0, a1, n, k, w, h) => {
+      const punto = (r, i) => { const a = a0 + (i / (n - 1)) * (a1 - a0); return [cx + Math.cos(a) * r, cy + Math.sin(a) * r * k]; };
+      let d = '';
+      for (let i = 0; i < n; i++) { const [x, y] = punto(L, i); d += `M${cx} ${cy}L${x.toFixed(1)} ${y.toFixed(1)}`; }
+      for (let j = 1; j <= anelli; j++) {
+        const r = (L / anelli) * j * 0.95;
+        for (let i = 0; i < n - 1; i++) {
+          const [x1, y1] = punto(r, i), [x2, y2] = punto(r, i + 1);
+          d += `M${x1.toFixed(1)} ${y1.toFixed(1)}Q${(cx + (x1 + x2 - 2 * cx) * 0.42).toFixed(1)} ${(cy + (y1 + y2 - 2 * cy) * 0.42).toFixed(1)} ${x2.toFixed(1)} ${y2.toFixed(1)}`;
+        }
       }
-    }
-    const svg = `<svg viewBox="0 0 ${L} ${L}" xmlns="http://www.w3.org/2000/svg"><path d="${d}" fill="none" stroke="${col}" stroke-width="1"/></svg>`;
+      return `<svg viewBox="0 0 ${w} ${h}" xmlns="http://www.w3.org/2000/svg"><path d="${d}" fill="none" stroke="${col}" stroke-width="1"/></svg>`;
+    };
+    const dim = o.dimensione || '22vmin';
+    // forme (solo dashboard, il kiosk resta classico): "angolo" = quarto di cerchio,
+    // "allungata" = quarto d'ellisse che scende, "semicerchio" = mezza tela appesa al bordo laterale, un po' piu' in basso
+    const forme = ctx.kiosk ? {} : (o.forme || {});
     const angoli = o.angoli || ['alto-sinistra', 'alto-destra'];
     const els = angoli.map(pos => {
       const el = document.createElement('div');
-      const [v, h] = pos.split('-');
-      el.style.cssText = `position:absolute;${v === 'alto' ? 'top' : 'bottom'}:0;${h === 'sinistra' ? 'left' : 'right'}:0;` +
-        `width:${o.dimensione || '22vmin'};height:${o.dimensione || '22vmin'};` +
+      const [v, h] = pos.split('-'), forma = forme[pos] || 'angolo';
+      let svg, alt = dim, sotto = '0px';
+      if (forma === 'semicerchio') { svg = tela(0, L * 1.3, -Math.PI / 2, Math.PI / 2, 9, 1.3, L, L * 2.6); alt = `calc(${dim} * 2.6)`; sotto = `calc(${dim} * 0.25)`; }
+      else if (forma === 'allungata') { svg = tela(0, 0, 0, Math.PI / 2, raggi, 1.6, L, L * 1.6); alt = `calc(${dim} * 1.6)`; }
+      else svg = tela(0, 0, 0, Math.PI / 2, raggi, 1, L, L);
+      el.style.cssText = `position:absolute;${v === 'alto' ? 'top' : 'bottom'}:${sotto};${h === 'sinistra' ? 'left' : 'right'}:0;` +
+        `width:${dim};height:${alt};` +
         `transform:scale(${h === 'destra' ? -1 : 1},${v === 'basso' ? -1 : 1})`;
       el.innerHTML = svg; el.firstChild.style.cssText = 'width:100%;height:100%';
       ctx.livello.appendChild(el); return el;
@@ -521,8 +540,34 @@ const EFFETTI = {
         `<path d="M-3-1L-9-5M-3 0L-9 0M-3 1L-9 5M3-1L9-5M3 0L9 0M3 1L9 5"/></g><ellipse rx="4" ry="5" fill="${c}"/></svg>`;
       r.style.cssText = 'position:absolute;top:0;right:12vmin;width:1px;height:14vmin;transform-origin:top';
       ctx.livello.appendChild(r); els.push(r);
-      if (!lento()) r.animate([{ height: '6vmin' }, { height: '18vmin' }, { height: '6vmin' }],
+      const giu = forme['alto-destra'] === 'semicerchio' ? 2 : 1; // con la tela a semicerchio scende di piu', fino al centro della tela
+      r.style.height = `${14 * giu}vmin`;
+      if (!lento()) r.animate([{ height: `${6 * giu}vmin` }, { height: `${18 * giu}vmin` }, { height: `${6 * giu}vmin` }],
         { duration: 9000, iterations: Infinity, easing: 'ease-in-out' });
+    }
+    return () => els.forEach(e => e.remove());
+  },
+
+  palline(ctx, o) { // palline di Natale appese ai lati che dondolano piano
+    const colori = o.colori || ['#d62839', '#e8b931', '#1f8a4c', '#c0c7d0', '#b0283f', '#2a6fdb'];
+    const filo = ctx.dark ? 'rgba(220,220,230,.5)' : 'rgba(70,70,80,.45)';
+    const n = o.quantita ?? 3, els = [];
+    for (const lato of o.lati || ['sinistra', 'destra']) {
+      for (let i = 0; i < n; i++) {
+        const c = colori[(i * 2 + (lato === 'destra')) % colori.length], r = caso(2, 2.8);
+        const el = document.createElement('div');
+        el.style.cssText = `position:absolute;top:0;${lato === 'sinistra' ? 'left' : 'right'}:${1.5 + i * 4.5 + caso(-0.8, 0.8)}vmin;` +
+          `width:${r * 2}vmin;height:${caso(6, 13) + (i % 2) * 4}vmin;transform-origin:50% 0;opacity:${o.opacita ?? 0.85}`;
+        el.innerHTML = `<div style="width:1px;height:calc(100% - ${r * 2}vmin);margin:auto;background:${filo}"></div>` +
+          `<svg viewBox="-12 -14 24 26" style="display:block;width:100%"><rect x="-3" y="-14" width="6" height="4" rx="1" fill="#c9a94a"/>` +
+          `<circle r="11" fill="${c}"/><circle r="11" fill="url(#sg-pl)"/>` +
+          `<path d="M-10.5 2Q0 6 10.5 2" stroke="rgba(255,255,255,.45)" stroke-width="1.2" fill="none"/>` +
+          `<defs><radialGradient id="sg-pl" cx=".35" cy=".3" r=".75"><stop offset="0" stop-color="#fff" stop-opacity=".75"/>` +
+          `<stop offset=".25" stop-color="#fff" stop-opacity=".12"/><stop offset="1" stop-color="#000" stop-opacity=".25"/></radialGradient></defs></svg>`;
+        ctx.livello.appendChild(el); els.push(el);
+        if (!lento()) { const a = caso(2, 5); el.animate([{ transform: `rotate(${-a}deg)` }, { transform: `rotate(${a}deg)` }],
+          { duration: caso(3500, 6000), direction: 'alternate', iterations: Infinity, easing: 'ease-in-out', delay: -caso(0, 6000) }); }
+      }
     }
     return () => els.forEach(e => e.remove());
   },
@@ -705,7 +750,8 @@ function monta(p, dark) {
   const livello = document.createElement('div'); livello.id = ID + '-livello';
   livello.style.cssText = 'position:fixed;inset:0;pointer-events:none;z-index:3;overflow:hidden';
   document.body.appendChild(livello); pulizie.push(() => livello.remove());
-  const ctx = { dark, livello, periodo: p };
+  // kiosk/screensaver = pagina fuori da Lovelace che imposta window.seasonalGlass.modo
+  const ctx = { dark, livello, periodo: p, kiosk: window.seasonalGlass?.modo !== undefined };
 
   for (const d of p.decorazioni || []) {
     const src = d[modo] || d.light || d.dark;
@@ -715,6 +761,7 @@ function monta(p, dark) {
   }
   for (const e of p.effetti || []) {
     if (e.solo && e.solo !== modo) continue;
+    if (e.kiosk === false && ctx.kiosk) continue;
     const fn = EFFETTI[e.tipo];
     if (!fn) { console.warn(ID, 'effetto sconosciuto:', e.tipo); continue; }
     pulizie.push(fn(ctx, e));

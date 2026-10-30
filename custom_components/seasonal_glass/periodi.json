@@ -3,6 +3,7 @@
   "id": "autunno",
   "nome": "Autunno",
   "icona": "🍂",
+  "priorita": 10,
   "date": {
    "da": "09-12",
    "a": "12-10"
@@ -26,6 +27,7 @@
   "id": "carnevale",
   "nome": "Carnevale",
   "icona": "🎭",
+  "priorita": 25,
   "date": {
    "da": {
     "pasqua": -53
@@ -53,6 +55,7 @@
   "id": "estate",
   "nome": "Estate",
   "icona": "☀️",
+  "priorita": 10,
   "date": {
    "da": "06-11",
    "a": "09-11"
@@ -76,6 +79,7 @@
   "id": "halloween",
   "nome": "Halloween",
   "icona": "🎃",
+  "priorita": 20,
   "date": {
    "da": "10-20",
    "a": "11-02"
@@ -99,6 +103,7 @@
   "id": "inverno",
   "nome": "Inverno",
   "icona": "❄️",
+  "priorita": 10,
   "date": {
    "da": "12-11",
    "a": "03-09"
@@ -122,6 +127,7 @@
   "id": "natale",
   "nome": "Natale",
   "icona": "🎄",
+  "priorita": 30,
   "date": {
    "da": "11-30",
    "a": "01-06"
@@ -145,6 +151,7 @@
   "id": "pasqua",
   "nome": "Pasqua",
   "icona": "🐣",
+  "priorita": 25,
   "date": {
    "pasqua": [
     -11,
@@ -170,6 +177,7 @@
   "id": "primavera",
   "nome": "Primavera",
   "icona": "🌱",
+  "priorita": 10,
   "date": {
    "da": "03-10",
    "a": "06-10"

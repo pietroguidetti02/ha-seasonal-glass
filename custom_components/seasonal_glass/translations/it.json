@@ -27,7 +27,8 @@
         "data": {
           "movimento": "Animazioni",
           "giorni_normale": "Giorni normali tra due addobbi",
-          "attivi": "Periodi attivi"
+          "attivi": "Periodi attivi",
+          "notifica": "Notifica quando cambia l'addobbo"
         }
       },
       "date": {

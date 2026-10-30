@@ -27,6 +27,11 @@
       "quantita": 24
     },
     {
+      "tipo": "palline",
+      "quantita": 3,
+      "kiosk": false
+    },
+    {
       "tipo": "lucine",
       "stile": "bokeh",
       "quantita": 16

@@ -17,8 +17,8 @@ background can appear, and subtle decorations and animations come and go on thei
 
 | | Light | Dark |
 |---|---|---|
-| 🎃 Halloween | cobwebs in the corners, a dangling spider, bats | same, tuned for dark |
-| 🎄 Christmas | string lights, twinkling bokeh lights, snow | same, glowing |
+| 🎃 Halloween | cobwebs (one in the corner, one half-moon on the side), a dangling spider, bats | same, tuned for dark |
+| 🎄 Christmas | string lights, swinging baubles on the sides, twinkling bokeh lights, snow | same, glowing |
 | 🐣 Easter | decorated eggs in the grass that wobble, pastel petals | |
 | 🎭 Carnival | confetti | |
 | 🌱 Spring · ☀️ Summer · 🍂 Autumn · ❄️ Winter | sprouts · sea/sun palette · dry leaves · snow | fireflies on summer nights |
@@ -84,6 +84,9 @@ The integration loads the plugin on every dashboard by itself, so you don't add 
   Use `MM-DD` or `P-10` / `P+3` (days from Easter). Leave a field empty to keep it automatic.
 - **Colors:** pick a period, then its main color (light/dark), tint color (light/dark) and tint intensity
   (0 = no tint). "Restore default colors" undoes it.
+
+- **Notify when the decoration changes** (General, on by default): a Home Assistant notification when the period changes.
+  The current period is also available as `sensor.seasonal_glass_periodo`, handy for your own automations.
 
 Press **Save and close** at the end. Every device picks up the change within 2 minutes, with no restart.
 Folders you add to `periodi/` appear in these menus automatically after `python build.py`.
@@ -196,8 +199,9 @@ periodi/my-period/
 - **Built-in effects:**
   - Falling or moving: `neve` (snow), `foglie` (leaves), `petali` (petals), `coriandoli` (confetti), `pipistrelli` (bats), `lucciole` (fireflies)
   - Lights: `lucine` (`stile`: `filo` = string lights, `bokeh` = soft twinkling dots)
-  - Corners: `ragnatele` (cobwebs, `ragno`: spider), `germogli` (sprouts), `fogliame` (dry leaves), `uova` (eggs)
-  - Common options: `quantita`, `opacita`, `solo: "light" | "dark"`; for corner effects also `angoli`, `dimensione`
+  - Hanging: `palline` (Christmas baubles, `lati`: `sinistra`/`destra`)
+  - Corners: `ragnatele` (cobwebs, `ragno`: spider, `forme`: per corner `angolo` / `allungata` / `semicerchio`), `germogli` (sprouts), `fogliame` (dry leaves), `uova` (eggs)
+  - Common options: `quantita`, `opacita`, `solo: "light" | "dark"`, `kiosk: false` (skip on pages outside Lovelace); for corner effects also `angoli`, `dimensione`
 - Then run `python build.py`. A folder starting with `_` is ignored, which is handy for disabling a period.
 
 **Settings** (`impostazioni.json`):

@@ -6,6 +6,15 @@ Seasonal Glass is a lightweight Lovelace frontend plugin. You install it once an
 throughout the year it gently restyles your dashboard. The accent palette changes, a seasonal
 background can appear, and subtle decorations and animations come and go on their own.
 
+<p align="center">
+  <img src="docs/halloween.gif" width="49%" alt="Halloween (dark): cobwebs, spider and an orange-purple tint">
+  <img src="docs/natale.gif" width="49%" alt="Christmas (dark): string lights, twinkling bokeh and snow">
+  <img src="docs/pasqua.gif" width="49%" alt="Easter (light): eggs and pastel petals">
+  <img src="docs/autunno.gif" width="49%" alt="Autumn (light): dry leaves in the corners">
+</p>
+<p align="center"><img src="docs/carnevale.gif" width="49%" alt="Carnival (light): confetti"></p>
+<p align="center"><sub>Real recordings of the built-in preview. Taps and buttons keep working under every decoration.</sub></p>
+
 | | Light | Dark |
 |---|---|---|
 | 🎃 Halloween | cobwebs in the corners, a dangling spider, bats | same, tuned for dark |
@@ -221,3 +230,10 @@ No code from them is included. All decorations are drawn in code; any images are
 
 ## License
 MIT
+
+---
+
+<p align="center">
+  ⭐ <b>If Seasonal Glass made your dashboard smile, please star the repo!</b> ⭐<br>
+  It helps other Home Assistant users find it. Ideas and new periods are welcome in the issues.
+</p>

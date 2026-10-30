@@ -179,8 +179,24 @@ Non e' una dashboard Lovelace, quindi va incluso a mano nella pagina:
 - [x] Kiosk/screensaver Chromecast: plugin incluso + variabili `--seasonal-glass-velatura/colore`.
 - [ ] Immagini dell'utente (sfondi): solo proprie / generate / licenza libera.
 - [x] Integrazione con menu Configura (al posto della risorsa manuale).
-- [x] Installata in HA locale (v0.1.2): velatura sfondo + menu Configura -> Colori.
-- [ ] Pubblicazione GitHub/HACS (categoria Integration): istruzioni in `DA-FARE-GITHUB.md`.
+- [x] Installata in HA locale (v0.1.3): velatura sfondo + menu Configura -> Colori + icone brand.
+- [x] Pubblicata su GitHub (30/10/2026): https://github.com/pietroguidetti02/ha-seasonal-glass (pubblico,
+      8 topic, release v0.1.3, GIF dei periodi in `docs/`, invito alla stella in fondo al README).
+- [x] Validazione automatica `.github/workflows/validate.yml` (hacs/action + hassfest): verde.
+- [ ] Elenco ufficiale HACS: PR https://github.com/hacs/default/pull/12990 (13 controlli verdi), in attesa
+      di revisione umana (settimane). Non toccare il ramo `pietroguidetti02-add-seasonal-glass` del fork
+      `pietroguidetti02/default` finche' e' aperta. Nel frattempo: HACS -> Custom repositories.
+- [ ] Lancio su Reddit / forum HA a inizio dicembre (Natale), con il link del repo e le GIF.
+
+## Pubblicare una nuova versione
+1. Modificare `src/` o `periodi/`, poi `python build.py` (con `--ha` copia anche nell'HA locale -> riavvio).
+2. Alzare `version` in `custom_components/seasonal_glass/manifest.json` (il `?v=` fa riscaricare lo script alle app).
+3. Commit, `git push` (il login gh ha gli scope repo + workflow), aspettare che **Validate** sia verde su Actions.
+4. SOLO DOPO i test verdi: `gh release create vX.Y.Z -R pietroguidetti02/ha-seasonal-glass --title vX.Y.Z --notes "..."`.
+   (Una release creata prima dei test e' stata rifatta il 30/10: HACS chiede release successive alla validazione.)
+- Autore dei commit: pietroguidetti02 con indirizzo noreply di GitHub (config locale del repo), mai l'email personale.
+- GIF del README: catturate da `anteprima.html` con Edge headless via DevTools (script node `cattura.mjs`,
+  40 fotogrammi a 80 ms) + ffmpeg con palette; ricrearle se cambiano gli effetti.
 
 ## Ambiente
 Server di casa Windows, HA in Docker, config in `C:\DockerConfig\HA` (git locale,

@@ -141,9 +141,23 @@ export default function (ctx) {
   `calendario.py` e' la copia in Python della logica di core.js (vincitore per priorita' + giorni normali):
   se si cambia una delle due, cambiare anche l'altra. Usa solo le opzioni dell'integrazione, NON lo YAML della card.
   Stato precedente ripristinato al riavvio (RestoreEntity): niente notifiche doppie.
+- 0.2.0: `calendario.calendario()` = tratti consecutivi {id, periodo, inizio, fine}; lo usano il sensore (attributi
+  fine/prossimo/prossimo_inizio/giorni_al_prossimo) e `calendar.py` (`calendar.seasonal_glass`, eventi di giornata intera,
+  il "normale" non compare). PARITA' JS/PYTHON: `python tests/test_calendario.py` (serve node) esegue il blocco
+  "// ---------- date ----------" di core.js e confronta ogni giorno 2025-2040 con calendario.py; gira anche nelle
+  Actions (job "Calendario JS = Python", che controlla pure che i file generati da build.py siano committati).
+  Le funzioni di data (pasqua, giorno, attivo, vincitore, periodoDelGiorno) devono restare in quel blocco.
+- `"senza_pausa": true` (Capodanno, San Valentino, ricorrenze): niente giorni normali entrando o uscendo.
+- Ricorrenze personali: opzione `ricorrenze` (testo, una per riga `MM-GG Nome emoji #colore`), convertite da
+  `const.leggi_ricorrenze` in periodi `ricorrenza_N` (priorita' 50, coriandoli) e mandate al JS in `ricorrenze`.
+- Opzione `noti`: periodi gia' visti nel menu Generale. Un periodo nuovo non in `noti` parte attivo anche se manca
+  da `attivi`; senza `noti` (config 0.1.x) valgono gli 8 periodi originali (`PERIODI_V01`).
+- Servizio `seasonal_glass.anteprima` {periodo, minuti}: salvato in hass.data, esposto in `/api/seasonal_glass/config`
+  come `anteprima: {id, fino(ms)}`; il JS rilegge l'endpoint ogni 30 s (la dashboard Lovelace ogni 2 min).
 - `python build.py --ha` copia l'integrazione in `C:\DockerConfig\HA\custom_components\seasonal_glass` (poi riavvio).
 - Animazioni: il server di casa ha gli effetti visivi di Windows disattivati -> il browser segnala
-  "riduci movimento". Per questo il predefinito e' `movimento: sempre` e non `auto`.
+  "riduci movimento". Dalla 0.2.0 il predefinito per i nuovi utenti e' `auto` (accessibilita'); nella nostra HA
+  l'opzione `movimento: sempre` e' salvata esplicitamente nell'integrazione, quindi qui non cambia nulla.
 
 ## Card calendario (`custom:seasonal-glass-card`, nello stesso file JS)
 - Mostra periodo attuale + prossimi periodi con i normali in mezzo (date, durata), icona da `periodo.json` -> `icona`.
@@ -190,7 +204,11 @@ Non e' una dashboard Lovelace, quindi va incluso a mano nella pagina:
       appese ai lati che dondolano (effetto `palline`). Kiosk invariato: effetti con `"kiosk": false` e le
       `forme` non si applicano dove la pagina imposta `window.seasonalGlass.modo`.
 - [x] Pubblicata la 0.1.4 (release v0.1.4, 31/10/2026).
-- [ ] Rifare le GIF di halloween/natale (ragnatela semicerchio, palline).
+- [ ] Rifare le GIF di halloween/natale (ragnatela semicerchio, palline) e aggiungere capodanno/san-valentino.
+- [x] 0.2.0 (31/10/2026): Capodanno (fuochi) e San Valentino (cuori), ricorrenze personali, `calendar.seasonal_glass`,
+      attributi "prossimo" nel sensore, servizio anteprima, movimento predefinito `auto`, pausa animazioni a pagina
+      nascosta, fix 29/02 nel JS, test di parita' JS/Python in CI, CHANGELOG.md, modelli issue.
+- [ ] Da fare (task a parte): effetti legati al meteo (neve vera quando nevica, pioggia leggera) leggendo `weather.*`.
 - [x] Installata in HA locale (v0.1.3): velatura sfondo + menu Configura -> Colori + icone brand.
 - [x] Pubblicata su GitHub (30/10/2026): https://github.com/pietroguidetti02/ha-seasonal-glass (pubblico,
       8 topic, release v0.1.3, GIF dei periodi in `docs/`, invito alla stella in fondo al README).

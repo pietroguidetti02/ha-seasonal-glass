@@ -58,6 +58,7 @@ def periodi_effettivi(opzioni: dict) -> tuple[list[dict], int]:
             base.update({k: m[k] for k in ("da", "a") if k in m})
             date_p = base
         out.append({**p, "date": date_p})
+    out.extend(man.get("ricorrenze", []))  # ricorrenze personali (compleanni, anniversari) da "Configura"
     return out, max(1, man.get("giorni_normale", 1))
 
 
@@ -66,8 +67,8 @@ def _vincitore(periodi: list[dict], giorno: date):
     return max(attivi, key=lambda p: p.get("priorita", 0), default=None)
 
 
-def periodo_del_giorno(opzioni: dict, oggi: date | None = None):
-    periodi, n = periodi_effettivi(opzioni)
+def periodo_del_giorno(opzioni: dict, oggi: date | None = None, _cache=None):
+    periodi, n = _cache or periodi_effettivi(opzioni)
     oggi = oggi or date.today()
     p = _vincitore(periodi, oggi)
     if not p:
@@ -76,6 +77,21 @@ def periodo_del_giorno(opzioni: dict, oggi: date | None = None):
     for _ in range(n):  # iniziato da meno di N giorni subito dopo un altro periodo -> normale
         d -= timedelta(days=1)
         prima = _vincitore(periodi, d)
-        if prima is not p:
-            return p if prima is None else None
+        if prima is not p:  # "senza_pausa" (Capodanno, ricorrenze): niente cuscinetto ne' in entrata ne' in uscita
+            return p if prima is None or p.get("senza_pausa") or prima.get("senza_pausa") else None
     return p
+
+
+def calendario(opzioni: dict, dal: date, giorni: int = 400) -> list[dict]:
+    """Sequenza di tratti consecutivi {id, periodo (None = normale), inizio, fine} a partire da `dal`."""
+    cache = periodi_effettivi(opzioni)
+    out: list[dict] = []
+    for i in range(giorni):
+        d = dal + timedelta(days=i)
+        p = periodo_del_giorno(opzioni, d, cache)
+        pid = p["id"] if p else "normale"
+        if out and out[-1]["id"] == pid:
+            out[-1]["fine"] = d
+        else:
+            out.append({"id": pid, "periodo": p, "inizio": d, "fine": d})
+    return out

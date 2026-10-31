@@ -1,0 +1,11 @@
+name: 💡 Idea
+description: A new period, effect or option
+labels: [enhancement]
+body:
+  - type: textarea
+    id: idea
+    attributes:
+      label: Your idea
+      description: What would you like, and when should it show (dates)? References or sketches are welcome.
+    validations:
+      required: true

@@ -19,6 +19,7 @@
           "generale": "Generale",
           "date": "Date dei periodi",
           "colori": "Colori",
+          "ricorrenze": "Ricorrenze",
           "salva": "Salva e chiudi"
         }
       },
@@ -37,6 +38,8 @@
         "data": {
           "autunno_da": "🍂 Autunno - inizio",
           "autunno_a": "🍂 Autunno - fine",
+          "capodanno_da": "🎆 Capodanno - inizio",
+          "capodanno_a": "🎆 Capodanno - fine",
           "carnevale_da": "🎭 Carnevale - inizio",
           "carnevale_a": "🎭 Carnevale - fine",
           "estate_da": "☀️ Estate - inizio",
@@ -50,7 +53,9 @@
           "pasqua_da": "🐣 Pasqua - inizio",
           "pasqua_a": "🐣 Pasqua - fine",
           "primavera_da": "🌱 Primavera - inizio",
-          "primavera_a": "🌱 Primavera - fine"
+          "primavera_a": "🌱 Primavera - fine",
+          "san-valentino_da": "💘 San Valentino - inizio",
+          "san-valentino_a": "💘 San Valentino - fine"
         }
       },
       "colori": {
@@ -71,10 +76,34 @@
           "intensita": "Intensita' velatura",
           "ripristina": "Ripristina i colori predefiniti"
         }
+      },
+      "ricorrenze": {
+        "title": "Ricorrenze",
+        "description": "Compleanni, anniversari e altre giornate tue: una per riga, `MM-GG Nome emoji #colore` (emoji e colore facoltativi), es. `03-15 Compleanno Marta 🎂 #8e44ad`. Quel giorno le dashboard si colorano e compaiono i coriandoli.",
+        "data": {
+          "ricorrenze": "Elenco"
+        }
       }
     },
     "error": {
-      "data_non_valida": "Data non valida: usa MM-GG oppure P-10 / P+3"
+      "data_non_valida": "Data non valida: usa MM-GG oppure P-10 / P+3",
+      "ricorrenza_non_valida": "Riga non valida: {riga}"
+    }
+  },
+  "services": {
+    "anteprima": {
+      "name": "Anteprima periodo",
+      "description": "Mostra un periodo su tutti i dispositivi per qualche minuto, poi torna al calendario automatico.",
+      "fields": {
+        "periodo": {
+          "name": "Periodo",
+          "description": "Id del periodo (es. natale, halloween, capodanno, ricorrenza_1) oppure normale."
+        },
+        "minuti": {
+          "name": "Minuti",
+          "description": "Durata dell'anteprima. 0 = annulla subito."
+        }
+      }
     }
   },
   "selector": {

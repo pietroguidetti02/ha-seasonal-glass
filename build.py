@@ -189,7 +189,7 @@ def integrazione(periodi):
     if www.exists():
         shutil.rmtree(www)
     shutil.copytree(DIST, www)
-    elenco = [{k: p[k] for k in ("id", "nome", "icona", "priorita", "date", "colori", "velatura") if k in p} for p in periodi]
+    elenco = [{k: p[k] for k in ("id", "nome", "icona", "priorita", "senza_pausa", "date", "colori", "velatura") if k in p} for p in periodi]
     (CC / "periodi.json").write_text(json.dumps(elenco, ensure_ascii=False, indent=1), encoding="utf-8")
 
     testi = {
@@ -211,6 +211,13 @@ def integrazione(periodi):
             "principale_light": "Colore principale (tema chiaro)", "principale_dark": "Colore principale (tema scuro)",
             "velatura_light": "Velatura (tema chiaro)", "velatura_dark": "Velatura (tema scuro)",
             "intensita": "Intensita' velatura", "ripristina": "Ripristina i colori predefiniti",
+            "ricorrenze": "Ricorrenze", "desc_ricorrenze": "Compleanni, anniversari e altre giornate tue: una per riga, "
+                          "`MM-GG Nome emoji #colore` (emoji e colore facoltativi), es. `03-15 Compleanno Marta 🎂 #8e44ad`. "
+                          "Quel giorno le dashboard si colorano e compaiono i coriandoli.",
+            "elenco": "Elenco", "errore_ricorrenza": "Riga non valida: {riga}",
+            "srv_anteprima": "Anteprima periodo", "srv_anteprima_desc": "Mostra un periodo su tutti i dispositivi per qualche minuto, poi torna al calendario automatico.",
+            "srv_periodo": "Periodo", "srv_periodo_desc": "Id del periodo (es. natale, halloween, capodanno, ricorrenza_1) oppure normale.",
+            "srv_minuti": "Minuti", "srv_minuti_desc": "Durata dell'anteprima. 0 = annulla subito.",
         },
         "en": {
             "titolo": "Seasonal Glass", "aggiungi": "Adds automatic seasonal decorations to your dashboards.",
@@ -230,6 +237,13 @@ def integrazione(periodi):
             "principale_light": "Main color (light theme)", "principale_dark": "Main color (dark theme)",
             "velatura_light": "Tint (light theme)", "velatura_dark": "Tint (dark theme)",
             "intensita": "Tint intensity", "ripristina": "Restore default colors",
+            "ricorrenze": "Personal days", "desc_ricorrenze": "Birthdays, anniversaries and other days of yours: one per line, "
+                          "`MM-DD Name emoji #color` (emoji and color optional), e.g. `03-15 Marta's birthday 🎂 #8e44ad`. "
+                          "On that day the dashboards change color and confetti appears.",
+            "elenco": "List", "errore_ricorrenza": "Invalid line: {riga}",
+            "srv_anteprima": "Preview period", "srv_anteprima_desc": "Shows a period on every device for a few minutes, then goes back to the automatic calendar.",
+            "srv_periodo": "Period", "srv_periodo_desc": "Period id (e.g. natale, halloween, capodanno, ricorrenza_1) or normale.",
+            "srv_minuti": "Minutes", "srv_minuti_desc": "Preview length. 0 = cancel now.",
         },
     }
     for lingua, t in testi.items():
@@ -243,7 +257,8 @@ def integrazione(periodi):
             "options": {
                 "step": {
                     "init": {"title": t["titolo"], "description": t["menu"],
-                             "menu_options": {"generale": t["generale"], "date": t["date"], "colori": t["colori"], "salva": t["salva"]}},
+                             "menu_options": {"generale": t["generale"], "date": t["date"], "colori": t["colori"],
+                                              "ricorrenze": t["ricorrenze"], "salva": t["salva"]}},
                     "generale": {"title": t["generale"], "data": {
                         "movimento": t["movimento"], "giorni_normale": t["giorni_normale"], "attivi": t["attivi"], "notifica": t["notifica"]}},
                     "date": {"title": t["date"], "description": t["desc_date"], "data": campi_date},
@@ -252,9 +267,14 @@ def integrazione(periodi):
                     "colori_periodo": {"title": t["colori"], "description": t["desc_colori_periodo"],
                                        "data": {k: t[k] for k in ("principale_light", "principale_dark", "velatura_light",
                                                                   "velatura_dark", "intensita", "ripristina")}},
+                    "ricorrenze": {"title": t["ricorrenze"], "description": t["desc_ricorrenze"],
+                                   "data": {"ricorrenze": t["elenco"]}},
                 },
-                "error": {"data_non_valida": t["errore"]},
+                "error": {"data_non_valida": t["errore"], "ricorrenza_non_valida": t["errore_ricorrenza"]},
             },
+            "services": {"anteprima": {"name": t["srv_anteprima"], "description": t["srv_anteprima_desc"], "fields": {
+                "periodo": {"name": t["srv_periodo"], "description": t["srv_periodo_desc"]},
+                "minuti": {"name": t["srv_minuti"], "description": t["srv_minuti_desc"]}}}},
             "selector": {"movimento": {"options": {k: t[k] for k in ("sempre", "auto", "mai")}}},
         }
         cartella = CC / "translations"

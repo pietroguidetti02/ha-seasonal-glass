@@ -1,0 +1,15 @@
+anteprima:
+  fields:
+    periodo:
+      required: true
+      example: natale
+      selector:
+        text:
+    minuti:
+      default: 10
+      selector:
+        number:
+          min: 0
+          max: 1440
+          unit_of_measurement: min
+          mode: box

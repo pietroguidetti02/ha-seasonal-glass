@@ -19,6 +19,7 @@
           "generale": "General",
           "date": "Period dates",
           "colori": "Colors",
+          "ricorrenze": "Personal days",
           "salva": "Save and close"
         }
       },
@@ -37,6 +38,8 @@
         "data": {
           "autunno_da": "🍂 Autunno - start",
           "autunno_a": "🍂 Autunno - end",
+          "capodanno_da": "🎆 Capodanno - start",
+          "capodanno_a": "🎆 Capodanno - end",
           "carnevale_da": "🎭 Carnevale - start",
           "carnevale_a": "🎭 Carnevale - end",
           "estate_da": "☀️ Estate - start",
@@ -50,7 +53,9 @@
           "pasqua_da": "🐣 Pasqua - start",
           "pasqua_a": "🐣 Pasqua - end",
           "primavera_da": "🌱 Primavera - start",
-          "primavera_a": "🌱 Primavera - end"
+          "primavera_a": "🌱 Primavera - end",
+          "san-valentino_da": "💘 San Valentino - start",
+          "san-valentino_a": "💘 San Valentino - end"
         }
       },
       "colori": {
@@ -71,10 +76,34 @@
           "intensita": "Tint intensity",
           "ripristina": "Restore default colors"
         }
+      },
+      "ricorrenze": {
+        "title": "Personal days",
+        "description": "Birthdays, anniversaries and other days of yours: one per line, `MM-DD Name emoji #color` (emoji and color optional), e.g. `03-15 Marta's birthday 🎂 #8e44ad`. On that day the dashboards change color and confetti appears.",
+        "data": {
+          "ricorrenze": "List"
+        }
       }
     },
     "error": {
-      "data_non_valida": "Invalid date: use MM-DD or P-10 / P+3"
+      "data_non_valida": "Invalid date: use MM-DD or P-10 / P+3",
+      "ricorrenza_non_valida": "Invalid line: {riga}"
+    }
+  },
+  "services": {
+    "anteprima": {
+      "name": "Preview period",
+      "description": "Shows a period on every device for a few minutes, then goes back to the automatic calendar.",
+      "fields": {
+        "periodo": {
+          "name": "Period",
+          "description": "Period id (e.g. natale, halloween, capodanno, ricorrenza_1) or normale."
+        },
+        "minuti": {
+          "name": "Minutes",
+          "description": "Preview length. 0 = cancel now."
+        }
+      }
     }
   },
   "selector": {

@@ -1,4 +1,4 @@
-"""Aggiunta da Dispositivi e servizi + menu "Configura" (generale, date, colori)."""
+"""Aggiunta da Dispositivi e servizi + menu "Configura" (generale, date, colori, ricorrenze)."""
 from __future__ import annotations
 
 import voluptuous as vol
@@ -7,7 +7,7 @@ from homeassistant.config_entries import ConfigEntry, ConfigFlow, ConfigFlowResu
 from homeassistant.core import callback
 from homeassistant.helpers import selector
 
-from .const import DOMAIN, MODI, MOVIMENTI, PERIODI, colore_predefinito, date_automatiche, leggi_data
+from .const import DOMAIN, MODI, MOVIMENTI, PERIODI, PERIODI_V01, colore_predefinito, date_automatiche, leggi_data, leggi_ricorrenze
 
 
 class SeasonalGlassConfigFlow(ConfigFlow, domain=DOMAIN):
@@ -37,22 +37,22 @@ class SeasonalGlassOptionsFlow(OptionsFlow):
         return self.opzioni
 
     async def async_step_init(self, user_input=None) -> ConfigFlowResult:
-        return self.async_show_menu(step_id="init", menu_options=["generale", "date", "colori", "salva"])
+        return self.async_show_menu(step_id="init", menu_options=["generale", "date", "colori", "ricorrenze", "salva"])
 
     async def async_step_generale(self, user_input=None) -> ConfigFlowResult:
         o = self._opz()
-        if user_input is not None:
-            o.update(user_input)
-            return await self.async_step_init()
         tutti = [p["id"] for p in PERIODI]
+        if user_input is not None:
+            o.update(user_input, noti=tutti)  # periodi visti nel menu: d'ora in poi decide "attivi"
+            return await self.async_step_init()
         schema = vol.Schema({
-            vol.Required("movimento", default=o.get("movimento", "sempre")): selector.SelectSelector(
+            vol.Required("movimento", default=o.get("movimento", "auto")): selector.SelectSelector(
                 selector.SelectSelectorConfig(options=MOVIMENTI, translation_key="movimento",
                                               mode=selector.SelectSelectorMode.LIST)),
             vol.Required("giorni_normale", default=o.get("giorni_normale", 1)): selector.NumberSelector(
                 selector.NumberSelectorConfig(min=1, max=30, step=1, mode=selector.NumberSelectorMode.BOX,
                                               unit_of_measurement="giorni")),
-            vol.Required("attivi", default=o.get("attivi", tutti)): selector.SelectSelector(
+            vol.Required("attivi", default=[i for i in tutti if i in o.get("attivi", tutti) or i not in o.get("noti", PERIODI_V01)]): selector.SelectSelector(
                 selector.SelectSelectorConfig(
                     options=[{"value": p["id"], "label": f"{p.get('icona', '')} {p['nome']}".strip()} for p in PERIODI],
                     multiple=True, mode=selector.SelectSelectorMode.LIST)),
@@ -133,6 +133,24 @@ class SeasonalGlassOptionsFlow(OptionsFlow):
             step_id="colori_periodo", data_schema=vol.Schema(campi),
             description_placeholders={"periodo": f"{p.get('icona', '')} {p['nome']}".strip()},
         )
+
+    async def async_step_ricorrenze(self, user_input=None) -> ConfigFlowResult:
+        """Compleanni, anniversari...: una per riga 'MM-GG Nome [emoji] [#colore]'."""
+        o, errori, riga = self._opz(), {}, ""
+        if user_input is not None:
+            testo = user_input.get("ricorrenze", "")
+            try:
+                leggi_ricorrenze(testo)
+            except ValueError as e:
+                errori["ricorrenze"], riga = "ricorrenza_non_valida", str(e)
+            else:
+                o["ricorrenze"] = testo.strip()
+                return await self.async_step_init()
+        valore = (user_input or {}).get("ricorrenze", o.get("ricorrenze", ""))
+        schema = vol.Schema({vol.Optional("ricorrenze", description={"suggested_value": valore}):
+                             selector.TextSelector(selector.TextSelectorConfig(multiline=True))})
+        return self.async_show_form(step_id="ricorrenze", data_schema=schema, errors=errori,
+                                    description_placeholders={"riga": riga})
 
     async def async_step_salva(self, user_input=None) -> ConfigFlowResult:
         return self.async_create_entry(data=self._opz())

@@ -18,7 +18,7 @@
   .acc{color:var(--accent-color);font-weight:600}
 </style></head><body>
 <header><b>Anteprima addobbi</b>
-  <select id="p"><option value="">(data di oggi)</option><option value="autunno">Autunno</option><option value="carnevale">Carnevale</option><option value="estate">Estate</option><option value="halloween">Halloween</option><option value="inverno">Inverno</option><option value="natale">Natale</option><option value="pasqua">Pasqua</option><option value="primavera">Primavera</option><option value="off">Normale (nessun addobbo)</option></select>
+  <select id="p"><option value="">(data di oggi)</option><option value="autunno">Autunno</option><option value="capodanno">Capodanno</option><option value="carnevale">Carnevale</option><option value="estate">Estate</option><option value="halloween">Halloween</option><option value="inverno">Inverno</option><option value="natale">Natale</option><option value="pasqua">Pasqua</option><option value="primavera">Primavera</option><option value="san-valentino">San Valentino</option><option value="off">Normale (nessun addobbo)</option></select>
   <button id="m">Passa a dark</button><span id="info"></span></header>
 <main>
   <div class="card"><h3>Luce soggiorno</h3><span class="tog"></span> Accesa</div>
@@ -42,7 +42,7 @@
 <script type="module">
 /* Seasonal Glass - FILE GENERATO da build.py, non modificare: modificare src/ e periodi/ */
 const BASE = 'dist/';
-const IMPOSTAZIONI = {"giorni_normale": 1, "movimento": "sempre"};
+const IMPOSTAZIONI = {"giorni_normale": 1, "movimento": "auto"};
 const PERIODI = [
  {
   "nome": "Autunno",
@@ -77,6 +77,46 @@ const PERIODI = [
    }
   ],
   "id": "autunno"
+ },
+ {
+  "nome": "Capodanno",
+  "icona": "🎆",
+  "priorita": 40,
+  "senza_pausa": true,
+  "date": {
+   "da": "12-31",
+   "a": "01-01"
+  },
+  "colori": {
+   "light": {
+    "primary-color": "#b8860b",
+    "accent-color": "#2c3e8f"
+   },
+   "dark": {
+    "primary-color": "#f5c542",
+    "accent-color": "#7f9bff"
+   }
+  },
+  "velatura": {
+   "light": "linear-gradient(160deg, rgba(30,40,110,.16), rgba(200,160,40,.16))",
+   "dark": "linear-gradient(160deg, rgba(10,15,60,.35), rgba(120,90,10,.22))"
+  },
+  "effetti": [
+   {
+    "tipo": "fuochi"
+   },
+   {
+    "tipo": "lucine",
+    "stile": "bokeh",
+    "quantita": 12,
+    "colori": [
+     "#f5c542",
+     "#ffe9a8",
+     "#ffffff"
+    ]
+   }
+  ],
+  "id": "capodanno"
  },
  {
   "nome": "Carnevale",
@@ -335,6 +375,37 @@ const PERIODI = [
    }
   ],
   "id": "primavera"
+ },
+ {
+  "nome": "San Valentino",
+  "icona": "💘",
+  "priorita": 35,
+  "senza_pausa": true,
+  "date": {
+   "da": "02-12",
+   "a": "02-14"
+  },
+  "colori": {
+   "light": {
+    "primary-color": "#d63362",
+    "accent-color": "#ff7aa2"
+   },
+   "dark": {
+    "primary-color": "#ff5c8a",
+    "accent-color": "#ffa3bf"
+   }
+  },
+  "velatura": {
+   "light": "linear-gradient(160deg, rgba(230,60,110,.18), rgba(255,170,200,.16))",
+   "dark": "linear-gradient(160deg, rgba(150,20,60,.30), rgba(90,10,40,.28))"
+  },
+  "effetti": [
+   {
+    "tipo": "cuori",
+    "quantita": 14
+   }
+  ],
+  "id": "san-valentino"
  }
 ];
 const CUSTOM = {
@@ -344,7 +415,7 @@ const CUSTOM = {
 /* Seasonal Glass - motore del plugin.
  * build.py antepone: const BASE, const PERIODI, const CUSTOM.
  * Tutto cio' che disegna sta in un livello fisso con pointer-events:none: non blocca mai i tocchi. */
-const VERSIONE = '0.1.4';
+const VERSIONE = '0.2.0';
 const ID = 'seasonal-glass';
 
 // ---------- date ----------
@@ -360,7 +431,8 @@ function pasqua(y) { // algoritmo di Meeus (calendario gregoriano)
 function giorno(v, anno) {
   if (typeof v === 'object') { const e = pasqua(anno); e.setDate(e.getDate() + v.pasqua); return e; }
   const [m, g] = v.split('-').map(Number);
-  return new Date(anno, m - 1, g);
+  const d = new Date(anno, m - 1, g);
+  return d.getMonth() === m - 1 ? d : new Date(anno, m - 1, 28); // 02-29 negli anni non bisestili -> 28
 }
 
 function attivo(p, oggi) {
@@ -374,6 +446,26 @@ function attivo(p, oggi) {
     if (oggi >= inizio && oggi <= fine) return true;
   }
   return false;
+}
+
+function vincitore(giorno) {
+  return periodiEffettivi().filter(p => attivo(p, giorno)).sort((a, b) => (b.priorita || 0) - (a.priorita || 0))[0] || null;
+}
+
+// giorni cuscinetto: quando si passa direttamente da un periodo a un altro, i primi N giorni
+// (impostazioni.json -> giorni_normale, minimo 1) sono "normale". Cosi' tra due addobbi c'e' sempre una pausa.
+// Eccezione: i periodi brevi con "senza_pausa" (Capodanno, ricorrenze) entrano ed escono senza cuscinetto.
+// La stessa logica e' replicata in custom_components/seasonal_glass/calendario.py (tests/ controlla che coincidano).
+function periodoDelGiorno(oggi) {
+  const p = vincitore(oggi);
+  if (!p) return null;
+  const N = Math.max(1, MANUALE.giorni_normale ?? IMPOSTAZIONI.giorni_normale ?? 1), d = new Date(oggi);
+  for (let k = 0; k < N; k++) { // risale ai giorni precedenti finche' c'e' lo stesso periodo
+    d.setDate(d.getDate() - 1);
+    const prima = vincitore(d);
+    if (prima !== p) return !prima || p.senza_pausa || prima.senza_pausa ? p : null; // iniziato da meno di N giorni dopo un altro -> normale
+  }
+  return p;
 }
 
 // ---------- light / dark ----------
@@ -401,9 +493,9 @@ function modoScuro() {
 }
 
 // ---------- utilita' di disegno ----------
-// movimento: "sempre" (predefinito) | "auto" = segue "riduci movimento" del dispositivo | "mai" = immagine ferma
+// movimento: "sempre" | "auto" (predefinito) = segue "riduci movimento" del dispositivo | "mai" = immagine ferma
 const lento = () => {
-  const m = MANUALE.movimento || IMPOSTAZIONI.movimento || 'sempre';
+  const m = MANUALE.movimento || IMPOSTAZIONI.movimento || 'auto';
   return m === 'mai' || (m === 'auto' && matchMedia('(prefers-reduced-motion: reduce)').matches);
 };
 const caso = (a, b) => a + Math.random() * (b - a);
@@ -595,7 +687,34 @@ const EFFETTI = {
 
   foglie(ctx, o) { return cadute(ctx, o, o.colori || ['#c0582b', '#d98a2b', '#a33b20', '#8a5a2b', '#e0b13a'], 9, 15); },
   petali(ctx, o) { return cadute(ctx, o, o.colori || ['#f7c6d9', '#fce7a8', '#c9e7c4', '#d6c8f5', '#bfe3f5'], 5, 22); },
-  coriandoli(ctx, o) { return cadute(ctx, o, o.colori || ['#ff4f6d', '#ffc93c', '#3cc4ff', '#5be37d', '#b06bff', '#ff8a3c'], 3, 40, true); },
+  coriandoli(ctx, o) { return cadute(ctx, o, o.colori || ['#ff4f6d', '#ffc93c', '#3cc4ff', '#5be37d', '#b06bff', '#ff8a3c'], 3, 40, 'tondo'); },
+  cuori(ctx, o) { return cadute(ctx, o, o.colori || ['#ff4f7b', '#ff86a8', '#e8264f', '#ffb3c7'], 7, 14, 'cuore'); },
+
+  fuochi(ctx, o) { // fuochi d'artificio piccoli e radi nella fascia alta dello schermo (le card restano libere)
+    const colori = o.colori || ['#ffd84d', '#ff6b6b', '#6bc7ff', '#b98bff', '#7dffb0', '#ffffff'];
+    const alfa = o.opacita ?? (ctx.dark ? 0.85 : 0.6), ogni = o.intervallo ?? 1.6, fascia = o.altezza ?? 0.32;
+    let scintille = [], attesa = 0.3;
+    const scoppio = (W, H) => {
+      const x = caso(W * 0.08, W * 0.92), y = caso(H * 0.05, H * fascia), c = colori[Math.floor(caso(0, colori.length))];
+      const n = Math.round(caso(22, 34)), v = caso(45, 80);
+      for (let i = 0; i < n; i++) {
+        const a = (i / n) * Math.PI * 2 + caso(-0.1, 0.1), vel = v * caso(0.75, 1);
+        scintille.push({ x, y, vx: Math.cos(a) * vel, vy: Math.sin(a) * vel, vita: caso(1.1, 1.6), t: 0, c });
+      }
+    };
+    return conTela(ctx, (t, dt) => {
+      const { g } = t, W = t.w(), H = t.h(); g.clearRect(0, 0, W, H);
+      if (!dt) { for (let i = 0; i < 3; i++) scoppio(W, H); for (const p of scintille) { p.x += p.vx * 0.6; p.y += p.vy * 0.6; } } // immagine ferma
+      else if ((attesa -= dt) <= 0) { scoppio(W, H); attesa = caso(ogni * 0.6, ogni * 1.4); }
+      for (const p of scintille) {
+        p.t += dt; p.vy += 22 * dt; p.vx *= 1 - 0.9 * dt; p.vy *= 1 - 0.9 * dt; p.x += p.vx * dt; p.y += p.vy * dt;
+        g.globalAlpha = alfa * Math.max(0, 1 - p.t / p.vita); g.fillStyle = p.c;
+        g.beginPath(); g.arc(p.x, p.y, 1.6, 0, 7); g.fill();
+      }
+      if (dt) scintille = scintille.filter(p => p.t < p.vita);
+      g.globalAlpha = 1;
+    });
+  },
 
   germogli(ctx, o) { // steli verdi che spuntano dagli angoli e ondeggiano
     const verde = ctx.dark ? '#8fdc7a' : '#4f9a45', foglia = ctx.dark ? '#a8e88f' : '#66b35a';
@@ -697,7 +816,7 @@ function angoli(ctx, o, svg, predefiniti, opacita) {
   return () => els.forEach(e => e.remove());
 }
 
-function cadute(ctx, o, colori, dim, n, tondi = false) {
+function cadute(ctx, o, colori, dim, n, forma = 'foglia') {
   const items = Array.from({ length: o.quantita ?? n }, (_, i) => ({
     x: caso(0, innerWidth), y: caso(-innerHeight, innerHeight), r: caso(dim * 0.6, dim * 1.3), v: caso(20, 50),
     a: caso(0, 6), va: caso(-1.5, 1.5), f: caso(0, 6), c: colori[i % colori.length],
@@ -710,8 +829,12 @@ function cadute(ctx, o, colori, dim, n, tondi = false) {
       if (p.y > t.h() + 20) { p.y = -20; p.x = caso(0, t.w()); }
       g.save(); g.translate(p.x, p.y); g.rotate(p.a); g.fillStyle = p.c;
       g.beginPath();
-      if (tondi) g.ellipse(0, 0, p.r, p.r * Math.abs(Math.cos(p.a * 2)) + 0.5, 0, 0, 7); // il coriandolo "gira" su se stesso
-      else { g.moveTo(0, -p.r); g.quadraticCurveTo(p.r * 0.8, 0, 0, p.r); g.quadraticCurveTo(-p.r * 0.8, 0, 0, -p.r); }
+      if (forma === 'tondo') g.ellipse(0, 0, p.r, p.r * Math.abs(Math.cos(p.a * 2)) + 0.5, 0, 0, 7); // il coriandolo "gira" su se stesso
+      else if (forma === 'cuore') { // inclinato poco: un cuore capovolto non si legge
+        g.rotate(Math.sin(p.a) * 0.35 - p.a); const r = p.r;
+        g.moveTo(0, r * 0.9); g.bezierCurveTo(-r * 1.4, 0, -r * 0.7, -r * 1.1, 0, -r * 0.35);
+        g.bezierCurveTo(r * 0.7, -r * 1.1, r * 1.4, 0, 0, r * 0.9);
+      } else { g.moveTo(0, -p.r); g.quadraticCurveTo(p.r * 0.8, 0, 0, p.r); g.quadraticCurveTo(-p.r * 0.8, 0, 0, -p.r); }
       g.fill();
       g.restore();
     }
@@ -774,6 +897,11 @@ function scegli() {
   try { forzato = forzato || localStorage.getItem('addobbi'); } catch (e) { /* storage non disponibile */ }
   if (forzato === 'off') return null;
   if (forzato) { const p = periodiEffettivi().find(x => x.id === forzato); if (p) return p; }
+  const ant = MANUALE.anteprima; // servizio seasonal_glass.anteprima: vale su tutti i dispositivi fino a "fino"
+  if (ant && Date.now() < ant.fino) {
+    if (ant.id === 'off') return null;
+    const p = periodiEffettivi().find(x => x.id === ant.id); if (p) return p;
+  }
   const n = new Date();
   return periodoDelGiorno(new Date(n.getFullYear(), n.getMonth(), n.getDate()));
 }
@@ -801,7 +929,7 @@ function periodiEffettivi() {
         : p[k];
       return { ...p, ...pick(m, 'priorita', 'disattivo', 'nome', 'icona'), date,
         colori: fondi('colori'), velatura: fondi('velatura'), manuale: true };
-    }).filter(p => !p.disattivo);
+    }).filter(p => !p.disattivo).concat(MANUALE.ricorrenze || []); // ricorrenze personali dall'integrazione
   }
   return effettivi;
 }
@@ -821,11 +949,15 @@ function impostaManuale(m, fonte = 'card') {
 
 // impostazioni dell'integrazione (endpoint senza login: funziona anche sul kiosk) + YAML della card nella dashboard,
 // cosi' le modifiche valgono su tutti i dispositivi anche dove la card non e' a schermo
-async function caricaManuale() {
+async function caricaIntegrazione() {
   try {
     const r = await fetch('/api/seasonal_glass/config', { cache: 'no-store' });
     if (r.ok) impostaManuale(await r.json(), 'integrazione');
   } catch (e) { /* integrazione non installata: solo plugin */ }
+}
+
+async function caricaManuale() {
+  await caricaIntegrazione();
   const h = document.querySelector('home-assistant')?.hass;
   if (!h?.connection) return;
   try {
@@ -841,10 +973,6 @@ async function caricaManuale() {
   } catch (e) { /* dashboard non leggibile: resta il calendario automatico */ }
 }
 
-function vincitore(giorno) {
-  return periodiEffettivi().filter(p => attivo(p, giorno)).sort((a, b) => (b.priorita || 0) - (a.priorita || 0))[0] || null;
-}
-
 // sequenza dei periodi (normale compreso) da un giorno in avanti, per la card
 function calendario(dal, giorni = 366) {
   const out = [], d = new Date(dal.getFullYear(), dal.getMonth(), dal.getDate());
@@ -855,20 +983,6 @@ function calendario(dal, giorni = 366) {
     d.setDate(d.getDate() + 1);
   }
   return out;
-}
-
-// giorni cuscinetto: quando si passa direttamente da un periodo a un altro, i primi N giorni
-// (impostazioni.json -> giorni_normale, minimo 1) sono "normale". Cosi' tra due addobbi c'e' sempre una pausa.
-function periodoDelGiorno(oggi) {
-  const p = vincitore(oggi);
-  if (!p) return null;
-  const N = Math.max(1, MANUALE.giorni_normale ?? IMPOSTAZIONI.giorni_normale ?? 1), d = new Date(oggi);
-  for (let k = 0; k < N; k++) { // risale ai giorni precedenti finche' c'e' lo stesso periodo
-    d.setDate(d.getDate() - 1);
-    const prima = vincitore(d);
-    if (prima !== p) return prima ? null : p; // iniziato da meno di N giorni dopo un altro periodo -> normale
-  }
-  return p;
 }
 
 function aggiorna() {
@@ -893,6 +1007,13 @@ if (!window.__seasonalGlass) {
   }, 1000);
   caricaManuale(); // subito l'integrazione (anche sul kiosk), poi di nuovo quando hass e' pronto
   setInterval(caricaManuale, 120000);
+  setInterval(caricaIntegrazione, 30000); // leggero: cosi' l'anteprima dal servizio arriva in fretta
+  // pagina nascosta (scheda in background, schermo spento): ferma anche le animazioni CSS/Web Animations;
+  // quelle su canvas si fermano gia' da sole (requestAnimationFrame)
+  document.addEventListener('visibilitychange', () => {
+    const l = document.getElementById(ID + '-livello');
+    l?.getAnimations?.({ subtree: true }).forEach(a => (document.hidden ? a.pause() : a.play()));
+  });
   definisciCard();
 }
 

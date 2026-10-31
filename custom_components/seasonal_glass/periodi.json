@@ -24,6 +24,31 @@
   }
  },
  {
+  "id": "capodanno",
+  "nome": "Capodanno",
+  "icona": "🎆",
+  "priorita": 40,
+  "senza_pausa": true,
+  "date": {
+   "da": "12-31",
+   "a": "01-01"
+  },
+  "colori": {
+   "light": {
+    "primary-color": "#b8860b",
+    "accent-color": "#2c3e8f"
+   },
+   "dark": {
+    "primary-color": "#f5c542",
+    "accent-color": "#7f9bff"
+   }
+  },
+  "velatura": {
+   "light": "linear-gradient(160deg, rgba(30,40,110,.16), rgba(200,160,40,.16))",
+   "dark": "linear-gradient(160deg, rgba(10,15,60,.35), rgba(120,90,10,.22))"
+  }
+ },
+ {
   "id": "carnevale",
   "nome": "Carnevale",
   "icona": "🎭",
@@ -195,6 +220,31 @@
   "velatura": {
    "light": "linear-gradient(160deg, rgba(150,220,120,.22), rgba(255,220,235,.18))",
    "dark": "linear-gradient(160deg, rgba(40,110,50,.22), rgba(90,50,80,.15))"
+  }
+ },
+ {
+  "id": "san-valentino",
+  "nome": "San Valentino",
+  "icona": "💘",
+  "priorita": 35,
+  "senza_pausa": true,
+  "date": {
+   "da": "02-12",
+   "a": "02-14"
+  },
+  "colori": {
+   "light": {
+    "primary-color": "#d63362",
+    "accent-color": "#ff7aa2"
+   },
+   "dark": {
+    "primary-color": "#ff5c8a",
+    "accent-color": "#ffa3bf"
+   }
+  },
+  "velatura": {
+   "light": "linear-gradient(160deg, rgba(230,60,110,.18), rgba(255,170,200,.16))",
+   "dark": "linear-gradient(160deg, rgba(150,20,60,.30), rgba(90,10,40,.28))"
   }
  }
 ]

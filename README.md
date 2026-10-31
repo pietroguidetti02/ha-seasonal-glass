@@ -21,6 +21,9 @@ background can appear, and subtle decorations and animations come and go on thei
 | 🎄 Christmas | string lights, swinging baubles on the sides, twinkling bokeh lights, snow | same, glowing |
 | 🐣 Easter | decorated eggs in the grass that wobble, pastel petals | |
 | 🎭 Carnival | confetti | |
+| 🎆 New Year's Eve | small fireworks at the top of the screen, golden lights | brighter |
+| 💘 Valentine's Day | falling hearts | |
+| 🎂 Your own days | birthdays, anniversaries: confetti in the color you pick | |
 | 🌱 Spring · ☀️ Summer · 🍂 Autumn · ❄️ Winter | sprouts · sea/sun palette · dry leaves · snow | fireflies on summer nights |
 
 ## The concept
@@ -58,11 +61,16 @@ background can appear, and subtle decorations and animations come and go on thei
 | 🍂 Autumn | Sep 12 | Dec 10 |
 | 🎃 Halloween | Oct 21 | Nov 2 |
 | 🎄 Christmas | Dec 1 | Jan 6 |
+| 🎆 New Year's Eve | Dec 31 | Jan 1 |
+| 💘 Valentine's Day | Feb 12 | Feb 14 |
 
 Example year (2027), with 1 normal day between periods:
 Christmas → *normal* → Winter → *normal* → Carnival → *normal* → Winter → *normal* → Spring →
 *normal* → Easter → *normal* → Spring → *normal* → Summer → *normal* → Autumn → *normal* →
 Halloween → *normal* → Autumn → *normal* → Christmas.
+
+New Year's Eve, Valentine's Day and your own days are short: they interrupt the current period and hand it back
+the next day, without normal days (Christmas → New Year's Eve → Christmas).
 
 ## Installation
 
@@ -77,16 +85,33 @@ The integration loads the plugin on every dashboard by itself, so you don't add 
 ### Settings, like any integration
 **Settings → Devices & services → Seasonal Glass → Configure**:
 - **General**
-  - **Animations:** *Always* (default), *Follow the device* (honors "reduce motion") or *Never* (still image)
+  - **Animations:** *Follow the device* (default: still image if the device asks to "reduce motion"), *Always* or *Never*
   - **Normal days between two decorations**
   - **Active periods:** tick the seasons and holidays you want
 - **Period dates:** a start and end field for every period, with the automatic dates shown for reference.
   Use `MM-DD` or `P-10` / `P+3` (days from Easter). Leave a field empty to keep it automatic.
 - **Colors:** pick a period, then its main color (light/dark), tint color (light/dark) and tint intensity
   (0 = no tint). "Restore default colors" undoes it.
+- **Personal days:** birthdays, anniversaries, one per line: `MM-DD Name emoji #color` (emoji and color optional).
+  ```
+  03-15 Marta's birthday 🎂 #8e44ad
+  06-21 Anniversary 💍
+  ```
 
 - **Notify when the decoration changes** (General, on by default): a Home Assistant notification when the period changes.
-  The current period is also available as `sensor.seasonal_glass_periodo`, handy for your own automations.
+
+### Entities and service
+- **`sensor.seasonal_glass_periodo`**: the current period (`Halloween`, `Normale`...). Attributes: `fine` (last day),
+  `prossimo`, `prossimo_inizio`, `giorni_al_prossimo`, handy for automations ("turn on the Christmas lights when the
+  period starts", "3 days to Halloween").
+- **`calendar.seasonal_glass`**: every period as an all-day event, in the Calendar panel and usable with calendar triggers.
+- **`seasonal_glass.anteprima`**: shows a period on every device (kiosk included) for a few minutes, then goes back to automatic:
+  ```yaml
+  action: seasonal_glass.anteprima
+  data:
+    periodo: natale     # folder name, ricorrenza_1, or normale
+    minuti: 10          # 0 = cancel
+  ```
 
 Press **Save and close** at the end. Every device picks up the change within 2 minutes, with no restart.
 Folders you add to `periodi/` appear in these menus automatically after `python build.py`.
@@ -164,10 +189,11 @@ By default the plugin looks for the card in the default dashboard. For another d
 
 ## Try it / force a period
 Add these to the dashboard URL:
-- `?addobbi=natale`: force a period, using its folder name (`natale`, `halloween`, `pasqua`, `carnevale`, `primavera`, `estate`, `autunno`, `inverno`)
+- `?addobbi=natale`: force a period, using its folder name (`natale`, `halloween`, `pasqua`, `carnevale`, `primavera`, `estate`, `autunno`, `inverno`, `capodanno`, `san-valentino`)
 - `?addobbi=natale&modo=dark`: also force dark mode
 - `?addobbi=off`: normal, no decorations
 
+Or call the `seasonal_glass.anteprima` service to preview on every device at once.
 Or open `anteprima.html` locally to preview every period, light and dark, without Home Assistant.
 
 ## Make your own period
@@ -194,10 +220,12 @@ periodi/my-period/
 ```
 - **Dates:** each bound is `"MM-DD"` or `{ "pasqua": n }` (n days from Easter, negative = before). Ranges may wrap around New Year.
 - **Priority:** when periods overlap, the higher `priorita` wins. Holidays sit above seasons.
+- **No buffer** (`"senza_pausa": true`, optional): for short periods; no normal days when entering or leaving them.
 - **Colors:** any theme CSS variable, written without `--`.
 - **Tint** (`velatura`, optional): `{ "light": "<color or CSS gradient>", "dark": "..." }`, laid semi-transparent over your theme's own background (`--background-image`). Ignored when the period has its own `sfondo`.
 - **Built-in effects:**
-  - Falling or moving: `neve` (snow), `foglie` (leaves), `petali` (petals), `coriandoli` (confetti), `pipistrelli` (bats), `lucciole` (fireflies)
+  - Falling or moving: `neve` (snow), `foglie` (leaves), `petali` (petals), `coriandoli` (confetti), `cuori` (hearts), `pipistrelli` (bats), `lucciole` (fireflies)
+  - Sky: `fuochi` (fireworks in the top band: `intervallo` seconds, `altezza` 0-1 of the screen)
   - Lights: `lucine` (`stile`: `filo` = string lights, `bokeh` = soft twinkling dots)
   - Hanging: `palline` (Christmas baubles, `lati`: `sinistra`/`destra`)
   - Corners: `ragnatele` (cobwebs, `ragno`: spider, `forme`: per corner `angolo` / `allungata` / `semicerchio`), `germogli` (sprouts), `fogliame` (dry leaves), `uova` (eggs)
@@ -206,7 +234,7 @@ periodi/my-period/
 
 **Settings** (`impostazioni.json`):
 ```json
-{ "giorni_normale": 1 }
+{ "giorni_normale": 1, "movimento": "auto" }
 ```
 `giorni_normale` is how many plain days separate two decorations that would otherwise touch (minimum 1).
 

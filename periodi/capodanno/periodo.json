@@ -1,0 +1,35 @@
+{
+  "nome": "Capodanno",
+  "icona": "🎆",
+  "priorita": 40,
+  "senza_pausa": true,
+  "date": {
+    "da": "12-31",
+    "a": "01-01"
+  },
+  "colori": {
+    "light": {
+      "primary-color": "#b8860b",
+      "accent-color": "#2c3e8f"
+    },
+    "dark": {
+      "primary-color": "#f5c542",
+      "accent-color": "#7f9bff"
+    }
+  },
+  "velatura": {
+    "light": "linear-gradient(160deg, rgba(30,40,110,.16), rgba(200,160,40,.16))",
+    "dark": "linear-gradient(160deg, rgba(10,15,60,.35), rgba(120,90,10,.22))"
+  },
+  "effetti": [
+    {
+      "tipo": "fuochi"
+    },
+    {
+      "tipo": "lucine",
+      "stile": "bokeh",
+      "quantita": 12,
+      "colori": ["#f5c542", "#ffe9a8", "#ffffff"]
+    }
+  ]
+}

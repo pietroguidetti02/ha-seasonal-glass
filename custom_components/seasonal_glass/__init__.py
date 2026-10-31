@@ -5,21 +5,34 @@ L'integrazione:
   (niente risorsa Lovelace da aggiungere a mano);
 - espone le impostazioni scelte da "Configura" su /api/seasonal_glass/config (senza login: sono solo
   date e preferenze grafiche, cosi' le legge anche la pagina kiosk);
-- crea il sensore "Periodo" (sensor.py), che avvisa con una notifica interna quando l'addobbo cambia.
+- crea il sensore "Periodo" (sensor.py), che avvisa con una notifica interna quando l'addobbo cambia,
+  e il calendario dei periodi (calendar.py);
+- offre il servizio seasonal_glass.anteprima: mostra un periodo su tutti i dispositivi per qualche minuto
+  (il plugin lo legge dallo stesso endpoint, entro ~30 secondi).
 """
 from __future__ import annotations
 
 import json
+import time
 from pathlib import Path
+
+import voluptuous as vol
 
 from homeassistant.components.frontend import add_extra_js_url
 from homeassistant.components.http import HomeAssistantView, StaticPathConfig
 from homeassistant.config_entries import ConfigEntry
-from homeassistant.core import HomeAssistant
+from homeassistant.core import HomeAssistant, ServiceCall
+from homeassistant.exceptions import ServiceValidationError
+import homeassistant.helpers.config_validation as cv
 
-from .const import DOMAIN, URL_BASE, converti_opzioni
+from .const import DOMAIN, PERIODI, URL_BASE, converti_opzioni
 
 CARTELLA = Path(__file__).parent
+PIATTAFORME = ["sensor", "calendar"]
+SCHEMA_ANTEPRIMA = vol.Schema({
+    vol.Required("periodo"): cv.string,
+    vol.Optional("minuti", default=10): vol.All(vol.Coerce(int), vol.Range(min=0, max=1440)),
+})
 
 
 async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
@@ -32,11 +45,25 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
         )
         hass.http.register_view(ConfigView(hass))
         add_extra_js_url(hass, f"{URL_BASE}/seasonal-glass.js?v={versione}")
+        hass.services.async_register(DOMAIN, "anteprima", _anteprima, schema=SCHEMA_ANTEPRIMA)
         dati["registrato"] = True
     dati["opzioni"] = dict(entry.options)
     entry.async_on_unload(entry.add_update_listener(_opzioni_cambiate))
-    await hass.config_entries.async_forward_entry_setups(entry, ["sensor"])
+    await hass.config_entries.async_forward_entry_setups(entry, PIATTAFORME)
     return True
+
+
+async def _anteprima(call: ServiceCall) -> None:
+    """periodo = id (halloween, natale, ricorrenza_1...) oppure "normale"; minuti = 0 annulla."""
+    hass, pid, minuti = call.hass, call.data["periodo"].strip().lower(), call.data["minuti"]
+    dati = hass.data[DOMAIN]
+    validi = {p["id"] for p in PERIODI} | {r["id"] for r in converti_opzioni(dati.get("opzioni", {})).get("ricorrenze", [])}
+    if pid not in validi | {"normale"}:
+        raise ServiceValidationError(f"Periodo sconosciuto: {pid}. Validi: normale, {', '.join(sorted(validi))}")
+    if minuti == 0:
+        dati.pop("anteprima", None)
+    else:
+        dati["anteprima"] = {"id": "off" if pid == "normale" else pid, "fino": int((time.time() + minuti * 60) * 1000)}
 
 
 async def _opzioni_cambiate(hass: HomeAssistant, entry: ConfigEntry) -> None:
@@ -46,7 +73,7 @@ async def _opzioni_cambiate(hass: HomeAssistant, entry: ConfigEntry) -> None:
 async def async_unload_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     # lo script resta caricato fino al riavvio, ma senza impostazioni torna al calendario automatico
     hass.data[DOMAIN]["opzioni"] = {}
-    return await hass.config_entries.async_unload_platforms(entry, ["sensor"])
+    return await hass.config_entries.async_unload_platforms(entry, PIATTAFORME)
 
 
 class ConfigView(HomeAssistantView):
@@ -60,4 +87,8 @@ class ConfigView(HomeAssistantView):
         self.hass = hass
 
     async def get(self, request):
-        return self.json(converti_opzioni(self.hass.data.get(DOMAIN, {}).get("opzioni", {})))
+        dati = self.hass.data.get(DOMAIN, {})
+        out = converti_opzioni(dati.get("opzioni", {}))
+        if (a := dati.get("anteprima")) and a["fino"] > time.time() * 1000:
+            out["anteprima"] = a
+        return self.json(out)

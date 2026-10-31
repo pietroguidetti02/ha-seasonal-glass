@@ -1,5 +1,6 @@
 """Sensore "periodo attuale" (es. Halloween, Normale). A ogni cambio, se l'opzione "notifica" e' attiva,
-crea una notifica interna di HA. Lo stato precedente viene ripristinato al riavvio: niente notifiche doppie."""
+crea una notifica interna di HA. Lo stato precedente viene ripristinato al riavvio: niente notifiche doppie.
+Attributi: fine del periodo attuale, prossimo periodo, quando inizia e tra quanti giorni (per le automazioni)."""
 from __future__ import annotations
 
 from homeassistant.components import persistent_notification
@@ -9,7 +10,9 @@ from homeassistant.core import HomeAssistant, callback
 from homeassistant.helpers.event import async_track_time_change
 from homeassistant.helpers.restore_state import RestoreEntity
 
-from .calendario import periodo_del_giorno
+from datetime import date
+
+from .calendario import calendario
 from .const import DOMAIN
 
 NORMALE = "Normale"
@@ -42,10 +45,21 @@ class PeriodoSensor(RestoreEntity, SensorEntity):
     @callback
     def _aggiorna(self, scrivi: bool = True) -> None:
         o = self._entry.options
-        p = periodo_del_giorno(dict(o))
+        oggi = date.today()
+        tratti = calendario(dict(o), oggi)
+        p = tratti[0]["periodo"]
+        prossimo = next((t for t in tratti[1:] if t["periodo"]), None)  # prossimo addobbo vero (salta "normale")
         nome = p["nome"] if p else NORMALE
         self._attr_native_value = nome
-        self._attr_extra_state_attributes = {"id": p["id"] if p else "normale", "icona": (p or {}).get("icona", "")}
+        self._attr_extra_state_attributes = {
+            "id": tratti[0]["id"], "icona": (p or {}).get("icona", ""),
+            "fine": tratti[0]["fine"].isoformat(),
+            "prossimo": prossimo["periodo"]["nome"] if prossimo else None,
+            "prossimo_id": prossimo["id"] if prossimo else None,
+            "prossimo_icona": prossimo["periodo"].get("icona", "") if prossimo else None,
+            "prossimo_inizio": prossimo["inizio"].isoformat() if prossimo else None,
+            "giorni_al_prossimo": (prossimo["inizio"] - oggi).days if prossimo else None,
+        }
         if self._precedente not in (None, "unknown", "unavailable", nome) and o.get("notifica", True):
             icona = (p or {}).get("icona", "✨")
             persistent_notification.async_create(

@@ -1,0 +1,44 @@
+name: 🐞 Bug
+description: Something doesn't work as expected
+labels: [bug]
+body:
+  - type: textarea
+    id: cosa
+    attributes:
+      label: What happened?
+      description: What you expected and what you saw instead. Screenshots help a lot.
+    validations:
+      required: true
+  - type: input
+    id: versione
+    attributes:
+      label: Seasonal Glass version
+      placeholder: "0.2.0"
+    validations:
+      required: true
+  - type: input
+    id: ha
+    attributes:
+      label: Home Assistant version
+      placeholder: "2026.10.1"
+  - type: dropdown
+    id: dove
+    attributes:
+      label: Where does it happen?
+      multiple: true
+      options:
+        - Browser (desktop)
+        - Companion app (phone/tablet)
+        - Wall tablet / kiosk
+        - Chromecast / cast dashboard
+  - type: input
+    id: tema
+    attributes:
+      label: Theme in use
+      placeholder: "Frosted Glass Light / Dark, ..."
+  - type: textarea
+    id: log
+    attributes:
+      label: Browser console or HA log
+      description: Lines mentioning seasonal-glass / seasonal_glass, if any.
+      render: text

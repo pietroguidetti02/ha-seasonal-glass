@@ -189,7 +189,8 @@ Non e' una dashboard Lovelace, quindi va incluso a mano nella pagina:
       (`forme: {"alto-destra": "semicerchio"}`, anche `allungata`), ragno che scende di piu'; palline di Natale
       appese ai lati che dondolano (effetto `palline`). Kiosk invariato: effetti con `"kiosk": false` e le
       `forme` non si applicano dove la pagina imposta `window.seasonalGlass.modo`.
-- [ ] Pubblicare la 0.1.4: push -> Validate verde -> release v0.1.4 (vedi sotto). Rifare le GIF di halloween/natale.
+- [x] Pubblicata la 0.1.4 (release v0.1.4, 31/10/2026).
+- [ ] Rifare le GIF di halloween/natale (ragnatela semicerchio, palline).
 - [x] Installata in HA locale (v0.1.3): velatura sfondo + menu Configura -> Colori + icone brand.
 - [x] Pubblicata su GitHub (30/10/2026): https://github.com/pietroguidetti02/ha-seasonal-glass (pubblico,
       8 topic, release v0.1.3, GIF dei periodi in `docs/`, invito alla stella in fondo al README).

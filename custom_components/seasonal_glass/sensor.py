@@ -36,10 +36,14 @@ class PeriodoSensor(RestoreEntity, SensorEntity):
             self._precedente = vecchio.state
         self._aggiorna(scrivi=False)
         # poco dopo mezzanotte (il calendario cambia solo di giorno) e quando cambiano le opzioni
-        self.async_on_remove(async_track_time_change(self.hass, lambda _: self._aggiorna(), hour=0, minute=0, second=10))
+        self.async_on_remove(async_track_time_change(self.hass, self._mezzanotte, hour=0, minute=0, second=10))
         self.async_on_remove(self._entry.add_update_listener(self._opzioni))
 
     async def _opzioni(self, hass: HomeAssistant, entry: ConfigEntry) -> None:
+        self._aggiorna()
+
+    @callback
+    def _mezzanotte(self, _now) -> None:
         self._aggiorna()
 
     @callback

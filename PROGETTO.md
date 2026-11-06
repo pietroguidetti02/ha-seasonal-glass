@@ -128,7 +128,7 @@ export default function (ctx) {
   Generale (animazioni sempre/auto/mai, giorni normali, periodi attivi) · Date dei periodi (inizio/fine per
   periodo, `MM-GG` o `P-10`/`P+3`, vuoto = automatico) · Salva e chiudi.
 - `__init__.py`: serve `www/` su `/seasonal_glass/`, carica lo script in ogni pagina (`add_extra_js_url`,
-  niente risorsa Lovelace), espone `/api/seasonal_glass/config` (senza login, lo legge anche il kiosk).
+  niente risorsa Lovelace), espone `/api/seasonal_glass/impostazioni` (dal 0.2.1 rinominato da /config, cosi' le schede col JS vecchio prendono 404 e non avvisi di login falliti; CON login, richiesta revisore HACS: contiene i giorni personali; il JS lo legge con `hass.callApi`, il kiosk senza hass usa il calendario automatico).
 - Le opzioni stanno nella config entry (`.storage/core.config_entries`), non in YAML. Il plugin le rilegge
   ogni 2 minuti: nessun riavvio dopo una modifica.
 - File GENERATI da build.py (non modificarli a mano): `www/`, `periodi.json`, `strings.json`, `translations/`.
@@ -152,7 +152,7 @@ export default function (ctx) {
   `const.leggi_ricorrenze` in periodi `ricorrenza_N` (priorita' 50, coriandoli) e mandate al JS in `ricorrenze`.
 - Opzione `noti`: periodi gia' visti nel menu Generale. Un periodo nuovo non in `noti` parte attivo anche se manca
   da `attivi`; senza `noti` (config 0.1.x) valgono gli 8 periodi originali (`PERIODI_V01`).
-- Servizio `seasonal_glass.anteprima` {periodo, minuti}: salvato in hass.data, esposto in `/api/seasonal_glass/config`
+- Servizio `seasonal_glass.anteprima` {periodo, minuti}: salvato in hass.data, esposto in `/api/seasonal_glass/impostazioni`
   come `anteprima: {id, fino(ms)}`; il JS rilegge l'endpoint ogni 30 s (la dashboard Lovelace ogni 2 min).
 - `python build.py --ha` copia l'integrazione in `C:\DockerConfig\HA\custom_components\seasonal_glass` (poi riavvio).
 - Animazioni: il server di casa ha gli effetti visivi di Windows disattivati -> il browser segnala

@@ -415,7 +415,7 @@ const CUSTOM = {
 /* Seasonal Glass - motore del plugin.
  * build.py antepone: const BASE, const PERIODI, const CUSTOM.
  * Tutto cio' che disegna sta in un livello fisso con pointer-events:none: non blocca mai i tocchi. */
-const VERSIONE = '0.2.0';
+const VERSIONE = '0.2.1';
 const ID = 'seasonal-glass';
 
 // ---------- date ----------
@@ -947,12 +947,14 @@ function impostaManuale(m, fonte = 'card') {
   dispatchEvent(new Event('seasonal-glass-cambiato'));
 }
 
-// impostazioni dell'integrazione (endpoint senza login: funziona anche sul kiosk) + YAML della card nella dashboard,
-// cosi' le modifiche valgono su tutti i dispositivi anche dove la card non e' a schermo
+// impostazioni dell'integrazione (endpoint con login, via hass) + YAML della card nella dashboard,
+// cosi' le modifiche valgono su tutti i dispositivi anche dove la card non e' a schermo.
+// Pagine senza frontend HA (es. kiosk): niente hass, resta il calendario automatico
 async function caricaIntegrazione() {
+  const h = document.querySelector('home-assistant')?.hass;
+  if (!h?.callApi) return;
   try {
-    const r = await fetch('/api/seasonal_glass/config', { cache: 'no-store' });
-    if (r.ok) impostaManuale(await r.json(), 'integrazione');
+    impostaManuale(await h.callApi('GET', 'seasonal_glass/impostazioni'), 'integrazione');
   } catch (e) { /* integrazione non installata: solo plugin */ }
 }
 
@@ -1021,6 +1023,8 @@ if (!window.__seasonalGlass) {
 function definisciCard() {
   if (!window.customElements || customElements.get('seasonal-glass-card')) return;
   const fmt = d => d.toLocaleDateString('it-IT', { day: 'numeric', month: 'short' });
+  // nomi e icone arrivano da opzioni e YAML: mai markup grezzo nell'innerHTML
+  const esc = v => String(v ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);
   const durata = s => Math.round((s.fine - s.inizio) / 864e5) + 1;
 
   class SeasonalGlassCard extends HTMLElement {
@@ -1043,10 +1047,10 @@ function definisciCard() {
       const riga = (s, i) => {
         const p = s.periodo;
         return `<div class="r ${p ? '' : 'norm'} ${i === 0 ? 'ora' : ''}">
-          <span class="n">${p ? `${p.icona || ''} ${p.nome}` : 'Normale'}${p?.manuale ? ' <b class="man" title="modificato a mano nella card">manuale</b>' : ''}</span>
+          <span class="n">${p ? `${esc(p.icona)} ${esc(p.nome)}` : 'Normale'}${p?.manuale ? ' <b class="man" title="modificato a mano nella card">manuale</b>' : ''}</span>
           <span class="d">${i === 0 ? 'fino al ' + fmt(s.fine) : fmt(s.inizio) + (durata(s) > 1 ? ' → ' + fmt(s.fine) : '')}</span>
           <span class="g">${durata(s)} g</span>
-          ${p ? `<button data-p="${p.id}" title="anteprima su questo dispositivo">👁</button>` : '<span></span>'}</div>`;
+          ${p ? `<button data-p="${esc(p.id)}" title="anteprima su questo dispositivo">👁</button>` : '<span></span>'}</div>`;
       };
       this.root.innerHTML = `<style>
         ha-card{display:block;padding:16px}
@@ -1063,7 +1067,7 @@ function definisciCard() {
         .barra button{font-size:13px;opacity:1;padding:6px 12px;border-radius:10px;background:var(--primary-color);color:var(--text-primary-color,#fff)}
       </style><ha-card>
         <h2>Addobbi stagionali</h2>
-        <div class="sub">Ora: <b>${attuale ? attuale.nome : 'normale'}</b> · ${dark ? 'dark' : 'light'}${forzato ? ' · <b>anteprima forzata su questo dispositivo</b>' : ''}</div>
+        <div class="sub">Ora: <b>${attuale ? esc(attuale.nome) : 'normale'}</b> · ${dark ? 'dark' : 'light'}${forzato ? ' · <b>anteprima forzata su questo dispositivo</b>' : ''}</div>
         ${cal.map(riga).join('')}
         <div class="barra"><span>${MANUALE.periodi || MANUALE.giorni_normale ? 'Calendario con modifiche manuali' : 'Calendario automatico'}</span>
         ${forzato ? '<button id="auto">Torna automatico</button>' : ''}</div>

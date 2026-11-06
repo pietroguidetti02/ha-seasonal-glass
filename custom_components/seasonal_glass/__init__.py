@@ -3,8 +3,8 @@
 L'integrazione:
 - serve i file del plugin (cartella www/) su /seasonal_glass/ e lo carica in ogni pagina del frontend
   (niente risorsa Lovelace da aggiungere a mano);
-- espone le impostazioni scelte da "Configura" su /api/seasonal_glass/config (senza login: sono solo
-  date e preferenze grafiche, cosi' le legge anche la pagina kiosk);
+- espone le impostazioni scelte da "Configura" su /api/seasonal_glass/impostazioni (con login: dentro ci sono
+  anche i giorni personali; le pagine fuori dal frontend usano il calendario automatico);
 - crea il sensore "Periodo" (sensor.py), che avvisa con una notifica interna quando l'addobbo cambia,
   e il calendario dei periodi (calendar.py);
 - offre il servizio seasonal_glass.anteprima: mostra un periodo su tutti i dispositivi per qualche minuto
@@ -79,9 +79,8 @@ async def async_unload_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
 class ConfigView(HomeAssistantView):
     """Impostazioni correnti nel formato che il plugin JS si aspetta."""
 
-    url = "/api/seasonal_glass/config"
-    name = "api:seasonal_glass:config"
-    requires_auth = False
+    url = "/api/seasonal_glass/impostazioni"
+    name = "api:seasonal_glass:impostazioni"
 
     def __init__(self, hass: HomeAssistant) -> None:
         self.hass = hass

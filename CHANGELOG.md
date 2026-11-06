@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.2.1
+- **Security**: the settings endpoint is now `/api/seasonal_glass/impostazioni` and requires authentication (it contains your personal days). The plugin reads it through `hass.callApi`; pages outside the HA frontend fall back to the automatic calendar.
+- **Fix**: names and icons in the calendar card are escaped (no markup from options or YAML).
+- **Fix**: the midnight update of the period sensor ran outside the event loop, so the period-change notification never fired.
+- **Fix**: the calendar entity no longer recomputes the whole year on every state write ("took 0.5 seconds" warning).
+- README: install from the HACS default search first.
+
 ## 0.2.0
 - **New periods**: New Year's Eve 🎆 (Dec 31 – Jan 1, small fireworks at the top of the screen) and Valentine's Day 💘 (Feb 12–14, falling hearts). Short periods use `"senza_pausa": true`: they interrupt the current period without "normal" buffer days.
 - **Personal days** (Configure → Personal days): birthdays and anniversaries, one per line `MM-DD Name emoji #color`. Confetti and your color on that day.

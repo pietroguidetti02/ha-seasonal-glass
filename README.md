@@ -75,7 +75,8 @@ the next day, without normal days (Christmas → New Year's Eve → Christmas).
 ## Installation
 
 ### As an integration (recommended)
-1. **HACS** → ⋮ → Custom repositories → add this repo with category **Integration**, then download *Seasonal Glass*.
+1. **HACS** → search for **Seasonal Glass** → download.
+   Not listed yet? HACS → ⋮ → Custom repositories → add this repo with category **Integration**.
    To install manually instead, copy `custom_components/seasonal_glass` into `<config>/custom_components/`.
 2. Restart Home Assistant.
 3. Go to **Settings → Devices & services → Add integration → Seasonal Glass**.

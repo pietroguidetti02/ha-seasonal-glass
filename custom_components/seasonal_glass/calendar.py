@@ -30,6 +30,7 @@ class PeriodiCalendar(CalendarEntity):
     def __init__(self, entry: ConfigEntry) -> None:
         self._entry = entry
         self._attr_unique_id = f"{entry.entry_id}_calendario"
+        self._cache: tuple | None = None  # (giorno, opzioni, evento): il calcolo costa ~0,5 s, cambia solo di giorno
 
     async def async_added_to_hass(self) -> None:
         self.async_on_remove(async_track_time_change(self.hass, self._ricalcola, hour=0, minute=0, second=10))
@@ -48,9 +49,13 @@ class PeriodiCalendar(CalendarEntity):
     @property
     def event(self) -> CalendarEvent | None:
         """Periodo in corso (con la sua vera data d'inizio), altrimenti il prossimo."""
-        oggi = date.today()
+        oggi, opzioni = date.today(), dict(self._entry.options)
+        if self._cache and self._cache[:2] == (oggi, opzioni):
+            return self._cache[2]
         tratti = [t for t in self._tratti(oggi - timedelta(days=120), 520) if t["fine"] >= oggi]
-        return _evento(tratti[0]) if tratti else None
+        evento = _evento(tratti[0]) if tratti else None
+        self._cache = (oggi, opzioni, evento)
+        return evento
 
     async def async_get_events(self, hass: HomeAssistant, start_date: datetime, end_date: datetime) -> list[CalendarEvent]:
         # si parte 4 mesi prima (piu' del periodo piu' lungo) per avere giusto l'inizio di un periodo gia' in corso
